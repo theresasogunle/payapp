@@ -1,4 +1,3 @@
-
 import {AsyncStorage} from 'react-native';
 
 import { split } from 'apollo-link';

@@ -2,8 +2,10 @@ import {
   createStackNavigator,
   createAppContainer
 } from "react-navigation"
-import LandingScreen from './screens/Landing'
-import RegisterScreen from './screens/Register'
+import LandingScreen from './screens/auth/Landing'
+import RegisterScreen from './screens/auth/Register'
+import LoginScreen from './screens/auth/Login'
+import VerifyAccountScreen from './screens/auth/VerifyAccount'
 
 const AppNavigator = createStackNavigator(
   {
@@ -12,6 +14,12 @@ const AppNavigator = createStackNavigator(
     },
     Register: {
       screen: RegisterScreen
+    },
+    Login: {
+      screen: LoginScreen
+    },
+    VerifyAccount: {
+      screen: VerifyAccountScreen
     }
   },
   {

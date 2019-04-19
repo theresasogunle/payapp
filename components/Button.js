@@ -1,10 +1,10 @@
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo";
 
 class Button extends React.Component {
   constructor(props) {
-    super(props);    
+    super(props);
   }
   render() {
     let body = (
@@ -22,11 +22,16 @@ class Button extends React.Component {
       </TouchableOpacity>
     );
     if (this.props.disabled) {
-      body = (<View style={{ padding: 18, borderRadius: 8, backgroundColor: "#CCC" }}>
-        <Text style={{ color: "#FFF", textAlign: "center", fontSize: 14 }}>
-          {this.props.text ? this.props.text : ""}
-        </Text>
-      </View>);
+      body = (
+        <View style={{ padding: 18, borderRadius: 8, backgroundColor: "#CCC" }}>
+          <Text style={{ color: "#FFF", textAlign: "center", fontSize: 14 }}>
+            {this.props.text ? this.props.text : ""}
+          </Text>
+        </View>
+      );
+    }
+    if (this.props.loading) {
+      body = <ActivityIndicator color="#FFB82A" />;
     }
     return body;
   }
