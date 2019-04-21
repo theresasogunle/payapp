@@ -3,18 +3,17 @@ import {
   View,
   StatusBar,
   Text,
-  ScrollView,
-  ActivityIndicator
+  TouchableOpacity,
 } from "react-native";
 import { LinearGradient } from "expo";
-import { Dial, FullName, Email, Lock, Calendar } from "../../components/svg";
+import { Dial, Lock, } from "../../components/svg";
 import Button from "../../components/Button";
 import client from "../../plugins/apollo";
 import Top from "../../components/Top";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import CustomText from "../../components/Text";
-import Toast, { DURATION } from "react-native-easy-toast";
 import loginUser from "../../graphql/mutations/loginUser";
+import resetCode from '../../graphql/mutations/sendResetCode';
 
 // this is the screen that shows when the user is to login
 class Login extends React.Component {
@@ -33,6 +32,7 @@ class Login extends React.Component {
     };
     this.login = this.login.bind(this);
     this.validate = this.validate.bind(this);
+    this.sendResetCode = this.sendResetCode.bind(this);
   }
   // this checks for error in the form
   async validate() {
@@ -67,7 +67,27 @@ class Login extends React.Component {
     }
     this.setState({ loading: false });
   }
+  // this reaches to the api and sends a verification code to the user.
+  async sendResetCode() {
+      try {
+        const code = await client.mutate({
+          mutation: resetCode,
+          variables: { phonenumber:this.state.phonenumber}
+        });
+
+        if (code.data.forgotPassword.status === "successful") {
+          this.props.navigation.push('ForgotPassword',{phonenumber:this.state.phonenumber});
+        }
+        this.setState({ loading: false });
+       
+      } catch (error) {
+        console.log(error);
+        this.setState({ loading: false });
+      }
+      this.setState({ loading: false });
+  }
   render() {
+   
     return (
       <View
         style={{
@@ -122,10 +142,13 @@ class Login extends React.Component {
                 />
                 <View style={{ marginBottom: 13 }} />
                 <Button
-                  text="Register"
+                  text="Log In"
                   onPress={() => this.login()}
                   loading={this.state.loading}
                 />
+                <TouchableOpacity  loading={this.state.loading}  onPress={() => this.sendResetCode()}>
+                <Text  style={{  textAlign:"center", marginTop:10 , color:"#27347D", textDecorationLine:"underline" }}>Forgot Password ?</Text>
+                </TouchableOpacity>
                 <View style={{ marginBottom: 13 }} />
               </KeyboardAwareScrollView>
             </LinearGradient>

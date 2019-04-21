@@ -6,6 +6,7 @@ import LandingScreen from './screens/auth/Landing'
 import RegisterScreen from './screens/auth/Register'
 import LoginScreen from './screens/auth/Login'
 import VerifyAccountScreen from './screens/auth/VerifyAccount'
+import ForgotPasswordScreen from './screens/auth/ForgotPassword'
 
 const AppNavigator = createStackNavigator(
   {
@@ -20,6 +21,9 @@ const AppNavigator = createStackNavigator(
     },
     VerifyAccount: {
       screen: VerifyAccountScreen
+    },
+    ForgotPassword: {
+      screen: ForgotPasswordScreen
     }
   },
   {
