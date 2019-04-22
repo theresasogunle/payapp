@@ -97,6 +97,54 @@ class CustomText extends React.Component {
           }}
         />
       );
+    } else if (this.props.keyboardType == "cardnum"){
+      input = (
+        <TextInput
+          selectionColor="#27347D"
+          autoCorrect={this.props.autoCorrect ? this.props.autoCorrect : true}
+          secureTextEntry={this.state.showPassword ? true : false}
+          value={this.props.value}
+          keyboardType="number-pad"
+          textContentType="creditCardNumber"
+          placeholder="4242 4242 4242 4242"
+          autoCapitalize={
+            this.props.keyboardType == "email-address" ? "none" : "words"
+          }
+          maxLength={(this.props.maxLength)?this.props.maxLength:300}
+          onChangeText={text => this.props.onChangeText(text)}
+          style={{
+            fontSize: 14,
+            width: "100%",
+            color: "#27347D",
+            flex: 1,
+            ...this.props.textStyle
+          }}
+        />
+      );
+    } else if (this.props.keyboardType == "card_date"){
+      input = (
+        <TextInput
+          selectionColor="#27347D"
+          ref={this.props.refs}
+          autoCorrect={this.props.autoCorrect ? this.props.autoCorrect : true}
+          secureTextEntry={this.state.showPassword ? true : false}
+          value={this.props.value}
+          keyboardType="number-pad"
+          placeholder="09/23"
+          autoCapitalize={
+            this.props.keyboardType == "email-address" ? "none" : "words"
+          }
+          maxLength={(this.props.maxLength)?this.props.maxLength:300}
+          onChangeText={text => this.props.onChangeText(text)}
+          style={{
+            fontSize: 14,
+            width: "100%",
+            color: "#27347D",
+            flex: 1,
+            ...this.props.textStyle
+          }}
+        />
+      );
     } else if (this.props.keyboardType == "dropdown") {
       input = (
         <Picker
@@ -136,7 +184,7 @@ class CustomText extends React.Component {
       );
     }
     return (
-      <View>
+      <View style={{flex: 1}}>
         <Text
           style={{
             fontSize: 12,

@@ -20,13 +20,12 @@ class HomeScreen extends React.Component {
     super(props);
     this.state = {
       tab: 1,
-      screenHeight: Dimensions.get('window').height
-    }
+      screenHeight: Dimensions.get("window").height
+    };
   }
 
   componentDidMount() {
     console.log(this.state.screenHeight);
-    
   }
   render() {
     return (
@@ -38,11 +37,15 @@ class HomeScreen extends React.Component {
         <StatusBar backgroundColor="blue" barStyle="light-content" />
         <LinearGradient colors={["#F8F9FE", "#F9F9F9"]} style={{ flex: 1 }}>
           <ImageBackground
-            source={(this.state.screenHeight> 580)?require("../../assets/img/bg-top2.png"): require("../../assets/img/bg-top.png")}
+            source={
+              this.state.screenHeight > 580
+                ? require("../../assets/img/bg-top2.png")
+                : require("../../assets/img/bg-top.png")
+            }
             style={{
               width: "100%",
-              height: (this.state.screenHeight> 580)?300: 200,
-              paddingVertical: (this.state.screenHeight> 580)?40: 15,
+              height: this.state.screenHeight > 580 ? 300 : 200,
+              paddingVertical: this.state.screenHeight > 580 ? 40 : 15,
               backgroundPosition: "bottom"
             }}
             imageStyle={{
@@ -76,10 +79,19 @@ class HomeScreen extends React.Component {
             </View>
           </ImageBackground>
 
-          <TouchableOpacity style={{ position: 'absolute', bottom: 20, right: 20, zIndex: 99}}>
-            <LinearGradient colors={['#212C67', '#27347D']} style={{
-              height: 60, width: 60, borderRadius: 30, justifyContent: 'center', alignItems: 'center'
-            }}>
+          <TouchableOpacity
+            style={{ position: "absolute", bottom: 20, right: 20, zIndex: 99 }}
+          >
+            <LinearGradient
+              colors={["#212C67", "#27347D"]}
+              style={{
+                height: 60,
+                width: 60,
+                borderRadius: 30,
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
               <Send />
             </LinearGradient>
           </TouchableOpacity>
@@ -89,11 +101,11 @@ class HomeScreen extends React.Component {
               width: "88%",
               alignSelf: "center",
               backgroundColor: "rgba(255,255,255,.89)",
-              padding: (this.state.screenHeight> 580)?26:16,
+              padding: this.state.screenHeight > 580 ? 26 : 16,
               position: "absolute",
-              top: (this.state.screenHeight> 580)?120:100,
+              top: this.state.screenHeight > 580 ? 120 : 100,
               borderRadius: 12,
-              shadowColor: '#27347D',
+              shadowColor: "#27347D",
               shadowOffset: {
                 height: 2,
                 width: 0
@@ -109,7 +121,7 @@ class HomeScreen extends React.Component {
                 alignItems: "center"
               }}
             >
-              <Text style={{color: '#212C68'}}>Balance</Text>
+              <Text style={{ color: "#212C68" }}>Balance</Text>
               <TouchableOpacity>
                 <View>
                   <QRCode />
@@ -120,8 +132,8 @@ class HomeScreen extends React.Component {
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                marginTop: (this.state.screenHeight> 580)?15: 8,
-                marginBottom: (this.state.screenHeight> 580)?10:20
+                marginTop: this.state.screenHeight > 580 ? 15 : 8,
+                marginBottom: this.state.screenHeight > 580 ? 10 : 20
               }}
             >
               <View
@@ -140,23 +152,76 @@ class HomeScreen extends React.Component {
                 0.00
               </Text>
             </View>
-            <Button text="+ Fund Wallet" />
+            <Button
+              text="+ Fund Wallet"
+              onPress={() => this.props.navigation.push("Card")}
+            />
           </View>
-          <View style={{marginTop: (this.state.screenHeight> 580)?20: 60, flex: 1}}>
-            <View style={{padding: 10, flexDirection: 'row'}}>
-              <TouchableOpacity onPress={()=> this.setState({tab: 1})}>
-                <Text style={{fontSize: 14, fontWeight: '500', padding: 10, marginLeft: 19, color: (this.state.tab===1)? '#212C67': '#9A9FBB'}}>All</Text>
+          <View
+            style={{
+              marginTop: this.state.screenHeight > 580 ? 20 : 60,
+              flex: 1
+            }}
+          >
+            <View style={{ padding: 10, flexDirection: "row" }}>
+              <TouchableOpacity onPress={() => this.setState({ tab: 1 })}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: "500",
+                    padding: 10,
+                    marginLeft: 19,
+                    color: this.state.tab === 1 ? "#212C67" : "#9A9FBB"
+                  }}
+                >
+                  All
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=> this.setState({tab: 2})}>
-                <Text style={{fontSize: 14, fontWeight: '500', padding: 10, marginLeft: 19, color: (this.state.tab===2)? '#212C67': '#9A9FBB'}}>Received</Text>
+              <TouchableOpacity onPress={() => this.setState({ tab: 2 })}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: "500",
+                    padding: 10,
+                    marginLeft: 19,
+                    color: this.state.tab === 2 ? "#212C67" : "#9A9FBB"
+                  }}
+                >
+                  Received
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={()=> this.setState({tab: 3})}>
-                <Text style={{fontSize: 14, fontWeight: '500', padding: 10, marginLeft: 19, color: (this.state.tab===3)? '#212C67': '#9A9FBB'}}>Sent</Text>
+              <TouchableOpacity onPress={() => this.setState({ tab: 3 })}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: "500",
+                    padding: 10,
+                    marginLeft: 19,
+                    color: this.state.tab === 3 ? "#212C67" : "#9A9FBB"
+                  }}
+                >
+                  Sent
+                </Text>
               </TouchableOpacity>
             </View>
-            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <EmptyTransaction />
-              <Text style={{color: '#212C67', fontWeight: '500', fontSize: 17, marginTop:20}}>You have no any transaction yet</Text>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <EmptyTransaction />
+              <Text
+                style={{
+                  color: "#212C67",
+                  fontWeight: "500",
+                  fontSize: 17,
+                  marginTop: 20
+                }}
+              >
+                You have no any transaction yet
+              </Text>
               {/* <Text style={{color: '#A0A4B8', fontSize: 12, fontWeight: '500'}}>Add new card and start sending money</Text> */}
             </View>
           </View>
