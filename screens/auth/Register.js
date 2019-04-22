@@ -3,8 +3,7 @@ import {
   View,
   StatusBar,
   Text,
-  ScrollView,
-  ActivityIndicator
+  ScrollView
 } from "react-native";
 import { LinearGradient } from "expo";
 import { Dial, FullName, Email, Lock, Calendar } from "../../components/svg";
