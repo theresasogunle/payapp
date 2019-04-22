@@ -1,11 +1,7 @@
 import React from "react";
-import {
-  View,
-  StatusBar,
-  Text
-} from "react-native";
+import { View, StatusBar, Text, AsyncStorage } from "react-native";
 import { LinearGradient } from "expo";
-import { Dial, Lock} from "../../components/svg";
+import { Dial, Lock } from "../../components/svg";
 import Button from "../../components/Button";
 import client from "../../plugins/apollo";
 import Top from "../../components/Top";
@@ -13,8 +9,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import CustomText from "../../components/Text";
 import resetPassword from "../../graphql/mutations/resetPassword";
 
-
-class ForgotPassword extends React.Component{
+class ForgotPassword extends React.Component {
   static navigationOptions = {
     header: null
   };
@@ -23,15 +18,12 @@ class ForgotPassword extends React.Component{
     this.state = {
       loading: false,
       // get the phone number passed from the previous screen
-      phonenumber: props.navigation.getParam("phonenumber"),
-     
+      phonenumber: props.navigation.getParam("phonenumber")
     };
     this.updatePassword = this.updatePassword.bind(this);
-    
-
   }
-   // this checks for error in the form
-   async validate() {
+  // this checks for error in the form
+  async validate() {
     this.setState({ error_password: "" });
     if (this.state.password.length < 8) {
       this.setState({ error_password: "Incorrect Password" });
@@ -44,33 +36,36 @@ class ForgotPassword extends React.Component{
     return true;
   }
 
-   // this reaches to the api and logs in the user which returns a token.
-   async updatePassword() {
+  // this reaches to the api and updates the password which returns a token.
+  async updatePassword() {
     this.setState({ loading: true });
     if (await this.validate()) {
-      const { password, code } = this.state; 
+      const { password, code } = this.state;
       try {
         const passwordUpdate = await client.mutate({
           mutation: resetPassword,
-          variables: { code:parseInt(code), password:password, phonenumber:this.state.phonenumber}
+          variables: {
+            code: parseInt(code),
+            password: password,
+            phonenumber: this.state.phonenumber
+          }
         });
-        console.log(passwordUpdate.data.resetPassword);
-        if(passwordUpdate.data.resetPassword.user.phonenumber === this.state.phonenumber ){
-          console.log("success");
-          this.setState({ loading: false });
+        if (
+          passwordUpdate.data.resetPassword.user.phonenumber ===
+          this.state.phonenumber
+        ) {
+          await AsyncStorage.setItem('userToken', passwordUpdate.data.resetPassword.token);
+          this.props.navigation.navigate('App');
         }
-      
       } catch (error) {
-       console.log(error);
-       this.setState({ loading: false });
+        console.log(error);
+        this.setState({ loading: false });
       }
-      this.setState({ loading: false });
     }
-  
   }
-    render() {
-        return(
-          <View
+  render() {
+    return (
+      <View
         style={{
           flex: 1
         }}
@@ -99,7 +94,9 @@ class ForgotPassword extends React.Component{
               }}
             >
               <Dial />
-             
+              <Text style={{ color: "#212C68", fontSize: 14 }}>
+                {this.props.navigation.getParam("phonenumber")}
+              </Text>
             </LinearGradient>
             <LinearGradient colors={["#F8F9FE", "#F9F9F9"]} style={{ flex: 1 }}>
               <KeyboardAwareScrollView
@@ -107,38 +104,40 @@ class ForgotPassword extends React.Component{
                   padding: 20,
                   alignContent: "center"
                 }}
-                // extraScrollHeight={30}
-                // extraHeight={220}
                 enableOnAndroid={true}
               >
-               <Text style={{ color: "#212C68", fontSize: 14 , marginBottom: 20 }}>
-              A password reset code has been sent to your email address
-              </Text>
-              
+                <Text
+                  style={{ color: "#212C68", fontSize: 14, marginBottom: 20 }}
+                >
+                  A password reset code has been sent to your email address
+                </Text>
+
                 <CustomText
-                  label="Your 6 digit Password Reset Code" 
+                  label="Your 6 digit Password Reset Code"
                   keyboardType="number-pad"
                   maxLength={6}
                   onChangeText={code => this.setState({ code })}
                 />
-                  <CustomText
-                    side={<Lock />}
-                    label="Your New Password"
-                    password={true}
-                    onChangeText={password => this.setState({ password })}
-                  />
+                <CustomText
+                  side={<Lock />}
+                  label="Your New Password"
+                  password={true}
+                  onChangeText={password => this.setState({ password })}
+                />
                 <View style={{ marginBottom: 13 }} />
-                  <Button text="Submit" onPress={() => this.updatePassword()} />
+                <Button
+                  text="Submit"
+                  onPress={() => this.updatePassword()}
+                  loading={this.state.loading}
+                />
                 <View style={{ marginBottom: 13 }} />
               </KeyboardAwareScrollView>
             </LinearGradient>
           </View>
         </LinearGradient>
       </View>
-        
-    
-        );
-    }
+    );
+  }
 }
 
 export default ForgotPassword;

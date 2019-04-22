@@ -107,8 +107,6 @@ class Register extends React.Component {
   async register() {
     this.setState({ loading: true });
     if (await this.validate()) {
-      console.log("yes");
-
       const {
         phonenumber,
         fullname,
@@ -122,7 +120,6 @@ class Register extends React.Component {
           mutation: signUp,
           variables: { phonenumber, fullname, email, dob, gender, password }
         });
-        console.log(register.data);
         if (register.data.signUp.status === "successful") {
           this.props.navigation.push('VerifyAccount', {phonenumber});
         }

@@ -1,19 +1,14 @@
 import React from "react";
-import {
-  View,
-  StatusBar,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { View, StatusBar, Text, TouchableOpacity, AsyncStorage } from "react-native";
 import { LinearGradient } from "expo";
-import { Dial, Lock, } from "../../components/svg";
+import { Dial, Lock } from "../../components/svg";
 import Button from "../../components/Button";
 import client from "../../plugins/apollo";
 import Top from "../../components/Top";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import CustomText from "../../components/Text";
 import loginUser from "../../graphql/mutations/loginUser";
-import resetCode from '../../graphql/mutations/sendResetCode';
+import resetCode from "../../graphql/mutations/sendResetCode";
 
 // this is the screen that shows when the user is to login
 class Login extends React.Component {
@@ -53,8 +48,9 @@ class Login extends React.Component {
           mutation: loginUser,
           variables: { password, phonenumber }
         });
-        console.log(login.data.loginUser);
-        this.setState({ loading: false });
+        
+        await AsyncStorage.setItem('userToken', login.data.loginUser.token);
+        this.props.navigation.navigate('App');
       } catch (error) {
         if (error.graphQLErrors) {
           const error2 = error.graphQLErrors[0].message;
@@ -65,35 +61,35 @@ class Login extends React.Component {
         this.setState({ loading: false });
       }
     }
-    this.setState({ loading: false });
   }
   // this reaches to the api and sends a verification code to the user.
   async sendResetCode() {
-      try {
-        const code = await client.mutate({
-          mutation: resetCode,
-          variables: { phonenumber:this.state.phonenumber}
-        });
+    try {
+      const code = await client.mutate({
+        mutation: resetCode,
+        variables: { phonenumber: this.state.phonenumber }
+      });
 
-        if (code.data.forgotPassword.status === "successful") {
-          this.props.navigation.push('ForgotPassword',{phonenumber:this.state.phonenumber});
-        }
-        this.setState({ loading: false });
-       
-      } catch (error) {
-        console.log(error);
-        this.setState({ loading: false });
+      if (code.data.forgotPassword.status === "successful") {
+        this.props.navigation.push("ForgotPassword", {
+          phonenumber: this.state.phonenumber
+        });
       }
       this.setState({ loading: false });
+    } catch (error) {
+      console.log(error);
+      this.setState({ loading: false });
+    }
+    this.setState({ loading: false });
   }
   render() {
-   
     return (
       <View
         style={{
           flex: 1
         }}
       >
+        {/* change the status bar to white */}
         <StatusBar backgroundColor="blue" barStyle="light-content" />
         <LinearGradient colors={["#F8F9FE", "#F9F9F9"]} style={{ flex: 1 }}>
           <Top mainText="Login" navigation={this.props.navigation} />
@@ -146,8 +142,20 @@ class Login extends React.Component {
                   onPress={() => this.login()}
                   loading={this.state.loading}
                 />
-                <TouchableOpacity  loading={this.state.loading}  onPress={() => this.sendResetCode()}>
-                <Text  style={{  textAlign:"center", marginTop:10 , color:"#27347D", textDecorationLine:"underline" }}>Forgot Password ?</Text>
+                <TouchableOpacity
+                  loading={this.state.loading}
+                  onPress={() => this.sendResetCode()}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      marginTop: 10,
+                      color: "#27347D",
+                      textDecorationLine: "underline"
+                    }}
+                  >
+                    Forgot Password ?
+                  </Text>
                 </TouchableOpacity>
                 <View style={{ marginBottom: 13 }} />
               </KeyboardAwareScrollView>

@@ -5,7 +5,7 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator
+  AsyncStorage
 } from "react-native";
 import { LinearGradient } from "expo";
 import { Dial, FullName, Email, Lock, Calendar } from "../../components/svg";
@@ -64,14 +64,13 @@ class VerifyAccount extends React.Component {
           mutation: verifyUser,
           variables: { code: parseInt(code), phonenumber: this.state.phonenumber }
         });
-        console.log(verify.data);
-        this.setState({ loading: false });
+        await AsyncStorage.setItem('userToken', verify.data.verifyUser.token);
+        this.props.navigation.navigate('App');
       } catch (error) {
         console.log(error);
         this.setState({ loading: false });
       }
     }
-    this.setState({ loading: false });
   }
   render() {
     return (

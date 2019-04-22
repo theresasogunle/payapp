@@ -7,6 +7,7 @@ export default gql`mutation resetPassword($code:Int! $password:String! $phonenum
     phonenumber:$phonenumber
     
   }){
+    token
     user{
       phonenumber
     }
