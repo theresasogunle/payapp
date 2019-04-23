@@ -6,12 +6,12 @@ export default class RavePayment {
   constructor({
     publicKey,
     encryptionKey,
-    production = false,
     currency = "NGN",
     country = "NG",
     txRef = "txref-" + Date.now(),
     amount,
     email,
+    phoneNumber,
     firstname,
     lastname,
     meta,
@@ -19,11 +19,7 @@ export default class RavePayment {
     subaccounts,
     redirectUrl
   }) {
-    var baseUrlMap = [
-      "https://ravesandboxapi.flutterwave.com/",
-      "https://api.ravepay.co/"
-    ];
-    this.baseUrl = production ? baseUrlMap[1] : baseUrlMap[0];
+    this.baseUrl = "https://api.ravepay.co/";
 
     this.getPublicKey = function() {
       return publicKey;
@@ -45,6 +41,9 @@ export default class RavePayment {
     };
     this.getEmail = function() {
       return email;
+    };
+    this.getPhoneNumber = function() {
+      return phoneNumber;
     };
     this.getFirstname = function() {
       return firstname;
@@ -73,6 +72,7 @@ export default class RavePayment {
       payload.txRef = this.getTransactionReference();
       payload.amount = this.getAmount();
       payload.email = this.getEmail();
+      payload.phonenumber = this.getPhoneNumber();
       payload.firstname = this.getFirstname();
       payload.lastname = this.getLastname();
       payload.subaccounts = this.getSubaccounts();
@@ -123,6 +123,9 @@ export default class RavePayment {
 
   pinCharge(payload) {
     payload.suggested_auth = "PIN";
+
+    console.log(payload);
+    
 
     return new Promise((resolve, reject) => {
       this.charge(payload)

@@ -21,7 +21,7 @@ const httpLink = new HttpLink({
 });
 
 const authLink = setContext(async (_, { headers }) => {
-  const token = await AsyncStorage.getItem('authToken');
+  const token = await AsyncStorage.getItem('userToken');
   return {
     headers: {
       ...headers,

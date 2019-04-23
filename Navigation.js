@@ -14,7 +14,10 @@ import AuthLoadingScreen from "./screens/AuthLoadingScreen";
 
 // App Screens
 import HomeScreen from './screens/app/HomeScreen';
-import CardPayment from './screens/app/CardPayment';
+
+//Card Payment
+import CardPayment from './screens/CardPayment';
+import PinVerification from './screens/CardPayment/Pin';
 
 const AuthStack = createStackNavigator(
   {
@@ -45,7 +48,8 @@ const AppStack = createStackNavigator({
   },
   Card: {
     screen: CardPayment
-  }
+  },
+  PinVerification
 });
 
 export default createAppContainer(

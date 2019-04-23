@@ -1,13 +1,19 @@
 import React from "react";
 import { View, StatusBar, Image, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo";
-import { Dial, Lock, Card, Calendar } from "../../components/svg";
+import { Lock, Card, Calendar } from "../../components/svg";
 import Button from "../../components/Button";
-import client from "../../plugins/apollo";
 import Top from "../../components/Top";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import CustomText from "../../components/Text";
 import cardValidator from "card-validator";
+import CardRave from "../../rave/Card";
+import client from "../../plugins/apollo";
+import User from "../../graphql/queries/user";
+
+const sleep = milliseconds => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+};
 
 // this is the screen that shows when the user wants to make payment
 class CardPayment extends React.Component {
@@ -19,22 +25,97 @@ class CardPayment extends React.Component {
     super(props);
     this.state = {
       loading: false,
-      cardno: "",
-      carddate: "",
-      cvv: "",
-      error_password: ""
+      cardno: "5531886652142950",
+      carddate: "09/22",
+      cvv: "564",
+      chargedAmount: 1000,
+      cardno_error: "",
+      carddate_error: "",
+      cvv_error: ""
     };
     this.validate = this.validate.bind(this);
     this.cc_format = this.cc_format.bind(this);
+    this.initiateCharge = this.initiateCharge.bind(this);
+    this.handleInitiateChargeRespone = this.handleInitiateChargeRespone.bind(
+      this
+    );
   }
+
+  // charges the card
+  async initiateCharge() {
+    this.setState({ loading: true });
+    if (await this.validate()) {
+      const { data } = await client.query({
+        query: User
+      });
+      const user = data.user;
+
+      const { chargedAmount, cardno, cvv } = this.state;
+      const expiryMonth = this.state.carddate.split("/")[0];
+      const expiryYear = this.state.carddate.split("/")[1];
+      const card = new CardRave({
+        chargedAmount,
+        cardno,
+        cvv,
+        expiryMonth,
+        expiryYear,
+        user
+      });
+      const charge = await card.initiatecharge();
+      this.setState({ loading: false });
+      // Check for suggested auth
+      this.handleInitiateChargeRespone(charge, card);
+    }
+    this.setState({ loading: false });
+  }
+
+  handleInitiateChargeRespone(charge, card) {
+    if (charge.data.suggested_auth) {
+      if (charge.data.suggested_auth.toUpperCase() === "PIN") {
+        
+        this.props.navigation.push("PinVerification", {
+          card
+        });
+      } else if (
+        charge.data.suggested_auth.toUpperCase() === "NOAUTH_INTERNATIONAL" ||
+        charge.data.suggested_auth.toUpperCase() === "AVS_VBVSECURECODE"
+      ) {
+        console.log(charge.data);
+      }
+    }
+  }
+
   // this checks for error in the form
   async validate() {
-    // this.setState({ error_password: "" });
-    // if (this.state.password.length < 8) {
-    //   this.setState({ error_password: "Incorrect Password" });
-    //   return false;
-    // }
-    // return true;
+    this.setState({ cardno_error: "", carddate_error: "", cvv_error: "" });
+    if (
+      this.state.cardno.replace(/\s/g, "").length !== 16      
+    ) {
+      if (this.state.cardno.replace(/\s/g, "").length !== 19) {
+        this.setState({ cardno_error: "Incorrect Card Number" });
+      }
+      
+    }
+    if (this.state.carddate.length !== 5) {
+      this.setState({ carddate_error: "Incorrect Expiry Date" });
+    }
+    if (this.state.cvv.length !== 3) {
+      if (this.state.cvv.length !== 4) {
+        this.setState({ cvv_error: "Incorrect CVV" });
+      }
+    }
+
+    // i put the sleep function so as for the function can take time to validate before returning a response
+    await sleep(1200);
+    // check if all errors are empty
+    if (
+      this.state.cardno_error == "" &&
+      this.state.carddate_error == "" &&
+      this.state.cvv_error == ""
+    ) {
+      return true;
+    }
+    return false;
   }
   date_format(carddate) {
     if (carddate.length <= 2) {
@@ -53,7 +134,7 @@ class CardPayment extends React.Component {
         this.setState({ carddate: carddate.slice(0, carddate.length - 1) });
       }
     }
-    if (carddate.length === 5) {
+    if (carddate.length === 5 || carddate.length === 4) {
       if (carddate.includes("/")) {
         this.setState({ carddate });
       }
@@ -143,7 +224,7 @@ class CardPayment extends React.Component {
                   label="Card Number"
                   keyboardType="cardnum"
                   value={this.state.cardno}
-                  error={this.state.error_password}
+                  error={this.state.cardno_error}
                   onChangeText={cardno => this.cc_format(cardno)}
                 />
                 <View style={{ marginBottom: 13 }} />
@@ -160,24 +241,24 @@ class CardPayment extends React.Component {
                     refs={2}
                     keyboardType="card_date"
                     value={this.state.carddate}
-                    error={this.state.error_password}
+                    error={this.state.carddate_error}
                     onChangeText={carddate => this.date_format(carddate)}
                   />
                   <View style={{ width: 20 }} />
                   <CustomText
-                    side={<Calendar />}
+                    side={<Lock />}
                     label="CVV"
-                    keyboardType= "number-pad"
+                    keyboardType="number-pad"
                     password={true}
                     value={this.state.cvv}
-                    error={this.state.error_password}
+                    error={this.state.cvv_error}
                     onChangeText={cvv => this.setState({ cvv })}
                   />
                 </View>
                 <View style={{ marginBottom: 13 }} />
                 <Button
                   text="Confirm"
-                  onPress={() => {}}
+                  onPress={() => this.initiateCharge()}
                   loading={this.state.loading}
                 />
                 <View style={{ marginBottom: 13 }} />
