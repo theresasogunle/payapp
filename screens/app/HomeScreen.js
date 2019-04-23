@@ -10,6 +10,8 @@ import {
 import { LinearGradient } from "expo";
 import { QRCode, Send, EmptyTransaction } from "../../components/svg";
 import Button from "../../components/Button";
+import client from "../../plugins/apollo";
+import User from "../../graphql/queries/user";
 
 class HomeScreen extends React.Component {
   // this removes the default header reactnavigation brings
@@ -20,12 +22,17 @@ class HomeScreen extends React.Component {
     super(props);
     this.state = {
       tab: 1,
+      name: '### ###',
       screenHeight: Dimensions.get("window").height
     };
   }
 
-  componentDidMount() {
-    console.log(this.state.screenHeight);
+  async componentDidMount() {
+    const { data } = await client.query({
+      query: User
+    });
+    const user = data.user;
+    this.setState({name: user.fullname})
   }
   render() {
     return (
@@ -65,7 +72,7 @@ class HomeScreen extends React.Component {
                     color: "white"
                   }}
                 >
-                  Oluwole Adebiyi
+                  {this.state.name}
                 </Text>
                 <Text
                   style={{
