@@ -167,7 +167,7 @@ class Landing extends React.Component {
                 />
               </View>
               <Button
-                text="Register"
+                text="NEXT"
                 disabled={(this.state.phonenumber.length<11)?true:false}
                 onPress={() => this.authenticateNumber()}
                 loading={this.state.loading}

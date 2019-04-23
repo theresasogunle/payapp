@@ -14,6 +14,7 @@ import AuthLoadingScreen from "./screens/AuthLoadingScreen";
 
 // App Screens
 import HomeScreen from './screens/app/HomeScreen';
+import TransferScreen from './screens/app/TransferScreen'
 
 //Card Payment
 import CardPayment from './screens/CardPayment';
@@ -35,6 +36,9 @@ const AuthStack = createStackNavigator(
     },
     ForgotPassword: {
       screen: ForgotPasswordScreen
+    },
+    Transfer: {
+      screen: TransferScreen
     }
   },
   {

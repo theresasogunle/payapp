@@ -230,7 +230,7 @@ class Register extends React.Component {
                     onChangeText={dob => this.setState({ dob })}
                   />
                   <View style={{ marginBottom: 13 }} />
-                  <Button text="Register" onPress={() => this.register()} loading={this.state.loading} />
+                  <Button text="NEXT" onPress={() => this.register()} loading={this.state.loading} />
                   <View style={{ marginBottom: 13 }} />
                 </KeyboardAwareScrollView>
               </ScrollView>

@@ -11,7 +11,7 @@ class CustomText extends React.Component {
     if (props.password) {
       showPassword = true;
     }
-    this.state = { showPassword };
+    this.state = { showPassword }; 
   }
   render() {
     const maxDate = dayjs()
@@ -22,6 +22,9 @@ class CustomText extends React.Component {
     let input = null;
     if (this.props.side) {
       side = <View style={{ marginRight: 15 }}>{this.props.side}</View>;
+    }
+    if(this.props.textSize){
+      
     }
     if (this.props.password) {
       togglePassword = (
@@ -174,7 +177,8 @@ class CustomText extends React.Component {
           maxLength={(this.props.maxLength)?this.props.maxLength:300}
           onChangeText={text => this.props.onChangeText(text)}
           style={{
-            fontSize: 14,
+            fontSize:this.props.size? this.props.size:14,
+            fontWeight:this.props.textWeight? this.props.textWeight:"normal",
             width: "100%",
             color: "#27347D",
             flex: 1,
@@ -187,6 +191,7 @@ class CustomText extends React.Component {
       <View style={{flex: 1}}>
         <Text
           style={{
+            
             fontSize: 12,
             fontWeight: "500",
             color: "#9696A5",

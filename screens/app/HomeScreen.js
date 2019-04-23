@@ -81,6 +81,7 @@ class HomeScreen extends React.Component {
 
           <TouchableOpacity
             style={{ position: "absolute", bottom: 20, right: 20, zIndex: 99 }}
+            onPress={() =>  this.props.navigation.push("Transfer")}
           >
             <LinearGradient
               colors={["#212C67", "#27347D"]}
