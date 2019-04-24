@@ -2,8 +2,8 @@ import React from 'react'
 import encryption from './encryption';
 import Axios from 'axios';
 
-export default class RavePayment {
-  constructor({ publicKey, encryptionKey, production = false, currency = "NGN", country = "NG", txRef = "txref-" + Date.now(), amount, email, firstname, lastname, meta, threeDsOverride, subaccounts, redirectUrl }) {
+export default class RaveUgandaMobileMoney {
+  constructor({ publicKey, encryptionKey, production = false, currency = "ZMW", country = "NG", txRef = "txref-" + Date.now(), network = "MTN", amount, orderRef = "orderref_" + Date.now(), email, firstname, lastname, is_mobile_money_ug = true }) {
     var baseUrlMap = ["https://ravesandboxapi.flutterwave.com/", "https://api.ravepay.co/"]
     this.baseUrl = (production) ? baseUrlMap[1] : baseUrlMap[0];
 
@@ -25,6 +25,14 @@ export default class RavePayment {
     this.getAmount = function () {
       return amount;
     }
+
+    this.getNetwork = function () {
+      return network;
+    }
+
+    this.getOrderReference = function () {
+      return orderRef;
+    }
     this.getEmail = function () {
       return email;
     }
@@ -34,17 +42,8 @@ export default class RavePayment {
     this.getLastname = function () {
       return lastname;
     }
-    this.getSubaccounts = function () {
-      return subaccounts;
-    }
-    this.getThreeDsOverride = function () {
-      return threeDsOverride;
-    }
-    this.getMetadata = function () {
-      return meta;
-    }
-    this.getRedirectUrl = function () {
-      return redirectUrl;
+    this.getUgandaMobileMoney = function () {
+      return is_mobile_money_ug;
     }
 
 
@@ -55,13 +54,13 @@ export default class RavePayment {
       payload.country = this.getCountry();
       payload.txRef = this.getTransactionReference();
       payload.amount = this.getAmount();
+      payload.network = this.getNetwork();
+      payload.orderRef = this.getOrderReference();
       payload.email = this.getEmail();
       payload.firstname = this.getFirstname();
       payload.lastname = this.getLastname();
-      payload.subaccounts = this.getSubaccounts();
-      payload["3DS_OVERRIDE"] = this.getThreeDsOverride();
-      payload.meta = this.getMetadata();     
-      payload.redirect_url = this.getRedirectUrl();
+      payload.is_mobile_money_ug = this.getUgandaMobileMoney();
+      
 
       return new Promise((resolve, reject) => {
         var client = encryption({ payload, encryptionkey: this.getEncryptionKey() });
@@ -96,78 +95,6 @@ export default class RavePayment {
       }).catch((e) => {
         reject(e);
       })
-    })
-  }
-
-  pinCharge(payload) {
-    payload.suggested_auth = "PIN";
-
-    return new Promise((resolve, reject) => {
-      this.charge(payload).then((response) => {
-        resolve(response);
-      }).catch((e) => {
-        reject(e);
-      })
-    })
-  }
-
-  avsCharge(payload, suggested_auth) {
-    payload.suggested_auth = suggested_auth;
-
-    return new Promise((resolve, reject) => {
-      this.charge(payload).then((response) => {
-        resolve(response);
-      }).catch((e) => {
-        reject(e);
-      })
-    })
-  }
-
-  validate({ transaction_reference, otp }) {
-    return new Promise((resolve, reject) => {
-      Axios({
-        url: this.baseUrl + 'flwv3-pug/getpaidx/api/validatecharge',
-        method: 'post',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        data: {
-          PBFPubKey: this.getPublicKey(),
-          transaction_reference,
-          otp
-        },
-      })
-        .then(function (response) {
-          resolve(response.data);
-        })
-        .catch(function (error) {
-          reject(error.response.data);
-        });
-    })
-  }
-
-  validateAccount({ transactionreference, otp }) {
-    return new Promise((resolve, reject) => {
-      Axios({
-        url: this.baseUrl + 'flwv3-pug/getpaidx/api/validate',
-        method: 'post',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        data: {
-          PBFPubKey: this.getPublicKey(),
-          transactionreference,
-          otp
-        },
-      })
-        .then(function (response) {
-          resolve(response.data);
-        })
-        .catch(function (error) {
-          reject(error.response.data);
-        });
     })
   }
 
@@ -243,25 +170,6 @@ export default class RavePayment {
   //       });
   //   })
   // }
-
-  listBanks() {
-    return new Promise((resolve, reject) => {
-      Axios({
-        url: this.baseUrl + 'flwv3-pug/getpaidx/api/flwpbf-banks.js?json=1',
-        method: 'get',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(function (response) {
-          resolve(response.data);
-        })
-        .catch(function (error) {
-          reject(error.response.data);
-        });
-    })
-  }
 
 
 }

@@ -2,14 +2,10 @@ import React from "react";
 import Dialog from "react-native-dialog";
 import { View } from "react-native";
 
-class   extends React.Component {
+class DialogModal extends React.Component {
   constructor(props) {
     super(props);
-    this.validate = this.validate.bind(this);
-    this.initiateCharge = this.initiateCharge.bind(this);
-    this.handleInitiateChargeRespone = this.handleInitiateChargeRespone.bind(
-      this
-    );
+    this.handleContinue = this.handleContinue.bind(this)
   }
   handleContinue() {
     this.props.onContinue()

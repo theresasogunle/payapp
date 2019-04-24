@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Modal, Text, Image, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {Password} from './Icons';
 
 export default class PinModal extends Component {
   constructor(props) {
@@ -11,27 +10,34 @@ export default class PinModal extends Component {
 
   render() {
     return (
-        <View style={{ position: 'absolute',flex: 1, height: '100%', alignItems: "center", paddingTop: 90, backgroundColor: "rgba(0,0,0,.6)", paddingHorizontal: 30 }}>
-          <View style={{ backgroundColor: "white", borderRadius: 5, maxWidth: 400}}>
-            <TouchableOpacity>
-
-            </TouchableOpacity>
-            <View style={{paddingVertical: 40, paddingHorizontal:50}}>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.props.pinModal}
+          onRequestClose={() => {
+            alert('Modal has been closed.');
+        }}>
+        <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: "rgba(0,0,0,.7)" }}>
+            <View style={{ backgroundColor: "white", borderTopWidth: 5, borderTopColor: this.props.secondarycolor, width: "90%", maxWidth: 400, paddingVertical: 40, paddingHorizontal:50}}>
               <Text style={{ textAlign: "center" }}>Please enter card pin to continue transaction</Text>
+
+
               <View style={styles.formGroup}>
                 <Text style={styles.label}>Pin</Text>
+                <Text style={{ color: '#999999', fontSize: 16 }}>CARD NUMBER</Text>
               <View style={{
-                borderBottomWidth: 2}}>
-                  <View style={{ paddingVertical: 5, paddingHorizontal: 5, flexDirection: 'row', justifyContent: 'center' }}>
-                    <View>
-                      <Password />
+                borderBottomWidth: 2,
+                borderBottomColor: this.props.secondarycolor}}>
+                  <View style={{ paddingVertical: 10, flexDirection: 'row' }}>
+                    <View style={{ paddingTop: 6 }}>
+                      <Image source={require('../../assets/icons/locked.png')} />
                     </View>
-                    <View style={{flex: 1}}>
+                    <View>
                       <TextInput
                         autoCorrect={false}
                         keyboardType="numeric"
                         secureTextEntry={true}
-                        style={{ fontSize: 20, paddingHorizontal: 10, width: '100%'}}
+                        style={{ fontSize: 20, paddingHorizontal: 10, minWidth: "98%" }}
                         underlineColorAndroid='rgba(0,0,0,0)'
                         onChangeText={(pin) => this.props.pinEdit(pin)}
                         value={this.props.pin}
@@ -41,14 +47,15 @@ export default class PinModal extends Component {
                 </View>
               </View>
 
+
               <TouchableOpacity onPress={this.props.confirm} style={{ width: "100%" }}>
                 <View style={{ backgroundColor: this.props.primarycolor, paddingVertical: 15, borderRadius: 5 }}>
                   <Text style={{ fontSize: 13, textAlign: "center", fontWeight: "bold" }}>ENTER</Text>
                 </View>
               </TouchableOpacity>
-            </View>
           </View>
         </View>
+        </Modal>
     );
   }
 }
@@ -59,5 +66,9 @@ const styles = StyleSheet.create({
   },
   label: {
     color: "#ACACAC"
-  }
+  },
+  // input: {
+  //   borderBottomWidth: 2,
+  //   borderBottomColor: this.props.secondarycolor
+  // }
 });

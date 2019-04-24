@@ -18,7 +18,6 @@ import TransferScreen from './screens/app/TransferScreen'
 
 //Card Payment
 import CardPayment from './screens/CardPayment';
-import PinVerification from './screens/CardPayment/Pin';
 
 const AuthStack = createStackNavigator(
   {
@@ -52,8 +51,7 @@ const AppStack = createStackNavigator({
   },
   Card: {
     screen: CardPayment
-  },
-  PinVerification
+  }
 });
 
 export default createAppContainer(
