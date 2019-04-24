@@ -155,7 +155,7 @@ class Register extends React.Component {
           opacity={1}
           textStyle={{ color: "white" }}
         />
-        <StatusBar backgroundColor="blue" barStyle="light-content" />
+        <StatusBar backgroundColor="#FF9E00" barStyle="light-content" />
         <LinearGradient colors={["#F8F9FE", "#F9F9F9"]} style={{ flex: 1 }}>
           <Top mainText="Register" navigation={this.props.navigation} />
           <View

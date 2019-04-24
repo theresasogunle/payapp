@@ -70,7 +70,7 @@ class ForgotPassword extends React.Component {
           flex: 1
         }}
       >
-        <StatusBar backgroundColor="blue" barStyle="light-content" />
+        <StatusBar backgroundColor="#FF9E00" barStyle="light-content" />
         <LinearGradient colors={["#F8F9FE", "#F9F9F9"]} style={{ flex: 1 }}>
           <Top mainText="Forgot Password" navigation={this.props.navigation} />
           <View

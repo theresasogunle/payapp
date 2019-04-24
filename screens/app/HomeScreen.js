@@ -41,7 +41,7 @@ class HomeScreen extends React.Component {
           flex: 1
         }}
       >
-        <StatusBar backgroundColor="blue" barStyle="light-content" />
+        <StatusBar backgroundColor="#FF9E00" barStyle="light-content" />
         <LinearGradient colors={["#F8F9FE", "#F9F9F9"]} style={{ flex: 1 }}>
           <ImageBackground
             source={
@@ -162,7 +162,7 @@ class HomeScreen extends React.Component {
             </View>
             <Button
               text="+ Fund Wallet"
-              onPress={() => this.props.navigation.push("Card")}
+              onPress={() => this.props.navigation.push("Fund")}
             />
           </View>
           <View

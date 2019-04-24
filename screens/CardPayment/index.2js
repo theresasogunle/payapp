@@ -195,7 +195,7 @@ class CardPayment extends React.Component {
         }}
       >
         {/* change the status bar to white */}
-        <StatusBar backgroundColor="blue" barStyle="light-content" />
+        <StatusBar backgroundColor="#FF9E00" barStyle="light-content" />
         <Dialog
           visible={this.state.isDialogVisible}
           title="Enter CARD PIN"

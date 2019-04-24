@@ -14,10 +14,9 @@ import AuthLoadingScreen from "./screens/AuthLoadingScreen";
 
 // App Screens
 import HomeScreen from './screens/app/HomeScreen';
+import FundScreen from './screens/app/FundScreen';
 import TransferScreen from './screens/app/TransferScreen'
-
-//Card Payment
-import CardPayment from './screens/CardPayment';
+import RaveScreen from './screens/app/RaveScreen'
 
 const AuthStack = createStackNavigator(
   {
@@ -49,8 +48,11 @@ const AppStack = createStackNavigator({
   Home: {
     screen: HomeScreen
   },
-  Card: {
-    screen: CardPayment
+  Rave: {
+    screen: RaveScreen
+  },
+  Fund: {
+    screen: FundScreen
   }
 });
 

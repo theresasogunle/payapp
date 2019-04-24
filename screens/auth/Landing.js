@@ -97,7 +97,7 @@ class Landing extends React.Component {
             textStyle={{ color: "white" }}
           />
           {/* change the status bar to white */}
-          <StatusBar backgroundColor="blue" barStyle="light-content" />
+          <StatusBar backgroundColor="#FF9E00" barStyle="light-content" />
           <LinearGradient colors={["#F8F9FE", "#F9F9F9"]} style={{ flex: 1 }}>
             <ImageBackground
               source={require("../../assets/img/bg-top.png")}

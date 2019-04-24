@@ -82,7 +82,7 @@ class TransferScreen extends React.Component {
         }}
       >
         {/* change the status bar to white */}
-        <StatusBar backgroundColor="blue" barStyle="light-content" />
+        <StatusBar backgroundColor="#FF9E00" barStyle="light-content" />
         <LinearGradient colors={["#F8F9FE", "#F9F9F9"]} style={{ flex: 1 }}>
           <Top mainText="Send Money" navigation={this.props.navigation} />
           <View

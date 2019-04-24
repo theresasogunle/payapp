@@ -11,7 +11,7 @@ class CustomText extends React.Component {
     if (props.password) {
       showPassword = true;
     }
-    this.state = { showPassword }; 
+    this.state = { showPassword };
   }
   render() {
     const maxDate = dayjs()
@@ -23,8 +23,24 @@ class CustomText extends React.Component {
     if (this.props.side) {
       side = <View style={{ marginRight: 15 }}>{this.props.side}</View>;
     }
-    if(this.props.textSize){
-      
+    if (this.props.keyboardType == "money") {
+      side = (
+        <View
+          style={{
+            marginRight: 15,
+            backgroundColor: "#FBA703",
+            borderRadius: 8,
+            height: 26,
+            width: 39,
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <Text style={{ color: "white", fontSize: 12 }}>NGN</Text>
+        </View>
+      );
+    }
+    if (this.props.textSize) {
     }
     if (this.props.password) {
       togglePassword = (
@@ -100,7 +116,7 @@ class CustomText extends React.Component {
           }}
         />
       );
-    } else if (this.props.keyboardType == "cardnum"){
+    } else if (this.props.keyboardType == "cardnum") {
       input = (
         <TextInput
           selectionColor="#27347D"
@@ -113,7 +129,7 @@ class CustomText extends React.Component {
           autoCapitalize={
             this.props.keyboardType == "email-address" ? "none" : "words"
           }
-          maxLength={(this.props.maxLength)?this.props.maxLength:300}
+          maxLength={this.props.maxLength ? this.props.maxLength : 300}
           onChangeText={text => this.props.onChangeText(text)}
           style={{
             fontSize: 14,
@@ -124,7 +140,7 @@ class CustomText extends React.Component {
           }}
         />
       );
-    } else if (this.props.keyboardType == "card_date"){
+    } else if (this.props.keyboardType == "card_date") {
       input = (
         <TextInput
           selectionColor="#27347D"
@@ -137,7 +153,7 @@ class CustomText extends React.Component {
           autoCapitalize={
             this.props.keyboardType == "email-address" ? "none" : "words"
           }
-          maxLength={(this.props.maxLength)?this.props.maxLength:300}
+          maxLength={this.props.maxLength ? this.props.maxLength : 300}
           onChangeText={text => this.props.onChangeText(text)}
           style={{
             fontSize: 14,
@@ -161,6 +177,29 @@ class CustomText extends React.Component {
           <Picker.Item label="JavaScript" value="js" />
         </Picker>
       );
+    } else if (this.props.keyboardType == "money") {
+      input = (
+        <TextInput
+          selectionColor="#27347D"
+          autoCorrect={this.props.autoCorrect ? this.props.autoCorrect : true}
+          secureTextEntry={this.state.showPassword ? true : false}
+          value={this.props.value}
+          keyboardType="numeric"
+          autoCapitalize={
+            this.props.keyboardType == "email-address" ? "none" : "words"
+          }
+          maxLength={this.props.maxLength ? this.props.maxLength : 300}
+          onChangeText={text => this.props.onChangeText(text)}
+          style={{
+            fontSize: 32,
+            fontWeight: "bold",
+            width: "100%",
+            color: "#27347D",
+            flex: 1,
+            ...this.props.textStyle
+          }}
+        />
+      );
     } else {
       input = (
         <TextInput
@@ -174,11 +213,13 @@ class CustomText extends React.Component {
           autoCapitalize={
             this.props.keyboardType == "email-address" ? "none" : "words"
           }
-          maxLength={(this.props.maxLength)?this.props.maxLength:300}
+          maxLength={this.props.maxLength ? this.props.maxLength : 300}
           onChangeText={text => this.props.onChangeText(text)}
           style={{
-            fontSize:this.props.size? this.props.size:14,
-            fontWeight:this.props.textWeight? this.props.textWeight:"normal",
+            fontSize: this.props.size ? this.props.size : 14,
+            fontWeight: this.props.textWeight
+              ? this.props.textWeight
+              : "normal",
             width: "100%",
             color: "#27347D",
             flex: 1,
@@ -188,10 +229,9 @@ class CustomText extends React.Component {
       );
     }
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Text
           style={{
-            
             fontSize: 12,
             fontWeight: "500",
             color: "#9696A5",
@@ -215,7 +255,9 @@ class CustomText extends React.Component {
 
           {togglePassword}
         </View>
-        <Text style={{fontSize: 12, color: 'red', marginTop: 2}}>{this.props.error}</Text>
+        <Text style={{ fontSize: 12, color: "red", marginTop: 2 }}>
+          {this.props.error}
+        </Text>
       </View>
     );
   }

@@ -41,7 +41,7 @@ export default class CardHeader extends Component {
         position: 'absolute'
       },
       nav: {
-        backgroundColor: '#fbeed8',
+        backgroundColor: '#FFA000',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.8,
         shadowRadius: 2,
@@ -65,7 +65,7 @@ export default class CardHeader extends Component {
         <View style={styles.container}>
           <View style={styles.nav}>
             <TouchableOpacity style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }} onPress={this.switchToCard}>
-              <Text style={styles.text}>Pay with <Text style={{ fontWeight: 'bold' }}>Debit Card</Text></Text>
+              <Text style={styles.text}>Fund with <Text style={{ fontWeight: 'bold' }}>Debit Card</Text></Text>
               {icon}
             </TouchableOpacity>
 
