@@ -115,7 +115,7 @@ export default class Rave extends React.Component {
       bottomOne: 1,
       bottomTwo: 90,
       colorOne: "#FFF",
-      colorTwo: "#000"
+      colorTwo: "#FFF"
     };
     this.getPage = this.getPage.bind(this);
   }
@@ -137,17 +137,17 @@ export default class Rave extends React.Component {
         this.state.bottomOne = 1;
         this.state.bottomTwo = 90;
         this.state.colorOne = "#FFF";
-        this.state.colorTwo = "#000";
+        this.state.colorTwo = "#FFF";
       } else if (this.state.page == "mpesa") {
         this.state.bottomOne = height - 110;
         this.state.bottomTwo = 1;
-        this.state.colorOne = "#F5A623";
-        this.state.colorTwo = "#000";
+        this.state.colorOne = "#FFF";
+        this.state.colorTwo = "#FFF";
       } else if (this.state.page == "card") {
         this.state.bottomOne = 1;
         this.state.bottomTwo = height - 110;
-        this.state.colorOne = "#000";
-        this.state.colorTwo = "#F5A623";
+        this.state.colorOne = "#FFF";
+        this.state.colorTwo = "#FFF";
       }
       if (this.state.page == "mpesa") {
         header1 = (
@@ -230,18 +230,18 @@ export default class Rave extends React.Component {
       if (this.state.page == "home") {
         this.state.bottomOne = 1;
         this.state.bottomTwo = 90;
-        this.state.colorOne = "#000";
-        this.state.colorTwo = "#000";
+        this.state.colorOne = "#FFF";
+        this.state.colorTwo = "#FFF";
       } else if (this.state.page == "mobilemoneygh") {
         this.state.bottomOne = height - 110;
         this.state.bottomTwo = 1;
-        this.state.colorOne = "#F5A623";
-        this.state.colorTwo = "#000";
+        this.state.colorOne = "#FFF";
+        this.state.colorTwo = "#FFF";
       } else if (this.state.page == "card") {
         this.state.bottomOne = 1;
         this.state.bottomTwo = height - 110;
-        this.state.colorOne = "#000";
-        this.state.colorTwo = "#F5A623";
+        this.state.colorOne = "#FFF";
+        this.state.colorOne = "#FFF";
       }
       if (this.state.page == "mobilemoneygh") {
         header1 = (
@@ -324,18 +324,18 @@ export default class Rave extends React.Component {
       if (this.state.page == "home") {
         this.state.bottomOne = 1;
         this.state.bottomTwo = 90;
-        this.state.colorOne = "#000";
-        this.state.colorTwo = "#000";
+        this.state.colorOne = "#FFF";
+        this.state.colorTwo = "#FFF";
       } else if (this.state.page == "mobilemoneyuganda") {
         this.state.bottomOne = height - 110;
         this.state.bottomTwo = 1;
-        this.state.colorOne = "#F5A623";
-        this.state.colorTwo = "#000";
+        this.state.colorOne = "#FFF";
+        this.state.colorTwo = "#FFF";
       } else if (this.state.page == "card") {
         this.state.bottomOne = 1;
         this.state.bottomTwo = height - 110;
-        this.state.colorOne = "#000";
-        this.state.colorTwo = "#F5A623";
+        this.state.colorOne = "#FFF";
+        this.state.colorOne = "#FFF";
       }
       if (this.state.page == "mobilemoneyuganda") {
         header1 = (
@@ -418,18 +418,18 @@ export default class Rave extends React.Component {
       if (this.state.page == "home") {
         this.state.bottomOne = 1;
         this.state.bottomTwo = 90;
-        this.state.colorOne = "#000";
-        this.state.colorTwo = "#000";
+        this.state.colorOne = "#FFF";
+        this.state.colorTwo = "#FFF";
       } else if (this.state.page == "mobilemoneyzambia") {
         this.state.bottomOne = height - 110;
         this.state.bottomTwo = 1;
-        this.state.colorOne = "#F5A623";
-        this.state.colorTwo = "#000";
+        this.state.colorOne = "#FFF";
+        this.state.colorTwo = "#FFF";
       } else if (this.state.page == "card") {
         this.state.bottomOne = 1;
         this.state.bottomTwo = height - 110;
-        this.state.colorOne = "#000";
-        this.state.colorTwo = "#F5A623";
+        this.state.colorOne = "#FFF";
+        this.state.colorOne = "#FFF";
       }
       if (this.state.page == "mobilemoneyzambia") {
         header1 = (
@@ -512,18 +512,18 @@ export default class Rave extends React.Component {
       if (this.state.page == "home") {
         this.state.bottomOne = 1;
         this.state.bottomTwo = 90;
-        this.state.colorOne = "#000";
-        this.state.colorTwo = "#000";
+        this.state.colorOne = "#FFF";
+        this.state.colorTwo = "#FFF";
       } else if (this.state.page == "account") {
         this.state.bottomOne = height - 110;
         this.state.bottomTwo = 1;
-        this.state.colorOne = "#F5A623";
-        this.state.colorTwo = "#000";
+        this.state.colorOne = "#FFF";
+        this.state.colorTwo = "#FFF";
       } else if (this.state.page == "card") {
         this.state.bottomOne = 1;
         this.state.bottomTwo = height - 110;
-        this.state.colorOne = "#000";
-        this.state.colorTwo = "#F5A623";
+        this.state.colorOne = "#FFF";
+        this.state.colorOne = "#FFF";
       }
 
       if (this.state.page == "card") {

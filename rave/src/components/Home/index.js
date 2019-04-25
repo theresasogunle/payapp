@@ -41,12 +41,13 @@ export default class index extends Component {
             <KeyboardAvoidingView behavior="padding" enabled>
                 <KeyboardAwareScrollView style={styles.container} keyboardShouldPersistTaps='always'>
                     <View style={{ flex: 1 }}>
-                        <View style={{ marginTop: 30, flexDirection: 'row', justifyContent: "space-between" }}><Text style={{ fontSize: 13, fontWeight: '400' }}>SECURED BY FLUTTERWAVE</Text>
+                        <View style={{ marginTop: 30, flexDirection: 'row', justifyContent: "space-between", alignItems: 'center' }}><View style={{flexDirection: 'row', alignItems: 'center'}}><Image source={{uri: 'https://flutterwave.com/wp-content/themes/flutterwave/images/FLW-icon-coloured@3x.png'}} style={{height: 25, width: 25,
+    resizeMode: 'contain', marginRight: 9}} /><Text style={{ fontSize: 13, fontWeight: '400' }}>SECURED BY FLUTTERWAVE</Text></View>
                             <TouchableOpacity onPress={this.closeRave}>{closeIcon}</TouchableOpacity>
                         </View>
                         <Text style={styles.text}>How would you</Text>
                         <Text style={{ fontSize: 42, fontWeight: '700', paddingTop: 10, color: '#12122c' }}>like to fund? </Text>
-                        <View style={{ borderBottomWidth: 4, marginTop: 30, marginRight: '50%', borderBottomColor: '#F5A623' }}></View>
+                        <View style={{ borderBottomWidth: 4, marginTop: 30, marginRight: '50%', borderBottomColor: '#27347D' }}></View>
                     </View>
                 </KeyboardAwareScrollView>
             </KeyboardAvoidingView>

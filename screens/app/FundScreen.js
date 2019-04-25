@@ -8,6 +8,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import CustomText from "../../components/Text";
 import client from "../../plugins/apollo";
 import User from "../../graphql/queries/user";
+import InitiateTransaction from "../../graphql/mutations/initiateTransaction";
 
 // this is the screen that shows when the user wants to make payment
 class CardPayment extends React.Component {
@@ -38,15 +39,35 @@ class CardPayment extends React.Component {
 
   async fund() {
     if (this.validate()) {
+      try {
+        this.setState({loading: true})
       const { data } = await client.query({
         query: User
       });
       const user = data.user;
-      this.props.navigation.push("Rave", {
+
+      const initiateTransactionData = await client.mutate({
+        mutation: InitiateTransaction,
+        variables: {
+          amount: parseFloat(this.state.amount)
+        }
+      })      
+
+      const txref = initiateTransactionData.data.initiateTransaction.transactionReference;
+
+      this.setState({loading: false})
+      return this.props.navigation.push("Rave", {
         amount: this.state.amount,
-        user
+        user,
+        txref
       });
+      } catch (error) {
+        console.log(error);
+        
+        this.setState({loading: false, amount_error: 'An Error Occured'})
+      }
     }
+    this.setState({loading: false})
   }
 
   render() {

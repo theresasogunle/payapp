@@ -15,6 +15,7 @@ import {
 
 //Scrollable view Library
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Button from "../../../../components/Button";
 
 var valid = require("card-validator");
 
@@ -601,13 +602,13 @@ export default class index extends Component {
 
     var numberValidation = valid.number(this.state.cardno);
 
-    let btnText = <Text style={{ fontSize: 13, textAlign: "center", fontWeight: "bold", color: this.props.secondarycolor }} >PAY {this.props.currency} {this.props.amount}</Text>;
+    let btnText = `FUND ${this.props.currency} ${this.props.amount}`;
 
-    let pinBtnText = <Text style={{ fontSize: 13, textAlign: "center", fontWeight: "bold", color: this.props.secondarycolor }}>Confirm PIN</Text>;
+    let pinBtnText = `Confirm PIN`;
 
-    let otpBtnText = <Text style={{ fontSize: 13, textAlign: "center", fontWeight: "bold", color: this.props.secondarycolor }}>Confirm OTP</Text>;
+    let otpBtnText = `Confirm OTP`;
 
-    let avsBtnText = <Text style={{ fontSize: 13, textAlign: "center", fontWeight: "bold", color: this.props.secondarycolor }}>ENTER</Text>;
+    let avsBtnText = `ENTER`;
 
     if (!numberValidation.isPotentiallyValid) {
       card = <Image source={require("../../assets/icons/cardnull.png")} />;
@@ -626,13 +627,6 @@ export default class index extends Component {
       }
     } else {
       card = <Image source={require("../../assets/icons/cardnull.png")} />;
-    }
-
-    if (this.state.loading) {
-      btnText = <ActivityIndicator size="small" color={this.props.secondarycolor} />;
-      pinBtnText = <ActivityIndicator size="small" color={this.props.secondarycolor} />;
-      otpBtnText = <ActivityIndicator size="small" color={this.props.secondarycolor} />;
-      avsBtnText = <ActivityIndicator size="small" color={this.props.secondarycolor} />;
     }
 
     let web = (
@@ -687,11 +681,13 @@ export default class index extends Component {
                 </View>
               </View>
 
-              <TouchableOpacity onPress={this.confirmPin} style={{ width: "100%", marginTop: 20 }} disabled={this.state.loading == false ? false : true}>
-                <View style={{ backgroundColor: this.props.primarycolor,paddingVertical: 15, borderRadius: 5, marginTop: 20, opacity: this.state.loading == false ? 1 : 0.6 }}>
-                  {pinBtnText}
-                </View>
-              </TouchableOpacity>
+
+              <View style={{ marginTop: 20 }} />
+        <Button
+          text={pinBtnText}
+          onPress={() => this.confirmPin()}
+          loading={this.state.loading}
+        />
             </View>
           </View>
         </KeyboardAwareScrollView>
@@ -728,11 +724,13 @@ export default class index extends Component {
                 </View>
               </View>
 
-              <TouchableOpacity onPress={this.confirmOtp} style={{ width: "100%", marginTop: 20 }}>
-                <View style={{ backgroundColor: this.props.primarycolor,paddingVertical: 15, borderRadius: 5, opacity: this.state.loading == false ? 1 : 0.6 }}>
-                  {otpBtnText}
-                </View>
-              </TouchableOpacity>
+
+              <View style={{ marginTop: 20 }} />
+        <Button
+          text={otpBtnText}
+          onPress={() => this.confirmOtp()}
+          loading={this.state.loading}
+        />
             </View>
           </KeyboardAwareScrollView>
         );
@@ -884,11 +882,14 @@ export default class index extends Component {
               </View>
             </View>
 
-            <TouchableOpacity onPress={this.submit} style={{ width: "100%", marginTop: 30 }} disabled={this.state.loading == false ? false : true}>
-              <View style={{ backgroundColor: this.props.primarycolor,paddingVertical: 15, borderRadius: 5, opacity: this.state.loading == false ? 1 : 0.6 }}>
-              {avsBtnText}  
-              </View>
-            </TouchableOpacity>
+
+
+            <View style={{ marginTop: 20 }} />
+        <Button
+          text={avsBtnText}
+          onPress={() => this.submit()}
+          loading={this.state.loading}
+        />
           </View>
         </KeyboardAwareScrollView>
       );
@@ -898,9 +899,9 @@ export default class index extends Component {
           <View style={{ flex: 1, height: 204 }}>
             <View style={styles.formGroup}>
               <Text
-                style={[styles.label, { fontSize: 20, marginVertical: 10 }]}
+                style={[styles.label, { fontSize: 20, marginBottom: 10, marginTop: 22 }]}
               >
-                Enter your card information to make payment
+                Enter your card information to fund wallet
               </Text>
               <View
                 style={[
@@ -1097,22 +1098,13 @@ export default class index extends Component {
             }}
           />
 
-          <TouchableOpacity
-            onPress={this.pay}
-            style={{ width: "100%", marginTop: 30 }}
-            disabled={this.state.loading == false ? false : true}
-          >
-            <View
-              style={{
-                backgroundColor: this.props.primarycolor,
-                paddingVertical: 15,
-                borderRadius: 5,
-                opacity: this.state.loading == false ? 1 : 0.6
-              }}
-            >
-              {btnText}
-            </View>
-          </TouchableOpacity>
+
+<View style={{ marginTop: 20 }} />
+        <Button
+          text={btnText}
+          onPress={() => this.pay()}
+          loading={this.state.loading}
+        />
         </KeyboardAwareScrollView>
       );
     }

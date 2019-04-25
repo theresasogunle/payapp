@@ -5,6 +5,7 @@ import { DatePicker, Picker } from "native-base";
 import { Col, Row, Grid } from 'react-native-easy-grid';
 //Scrollable view Library
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Button from '../../../../components/Button';
 
 
 export default class index extends Component {
@@ -325,9 +326,9 @@ export default class index extends Component {
       }
     });
 
-    let btnText = <Text style={{ fontSize: 13, textAlign: "center", fontWeight: "bold", color: this.props.secondarycolor }}>PAY {this.props.currency} {this.props.amount}</Text>;
+    let btnText = `FUND ${this.props.currency} ${this.props.amount}`;
 
-    let otpBtnText = <Text style={{ fontSize: 13, textAlign: "center", fontWeight: "bold", color: this.props.secondarycolor }}>Confirm OTP</Text>;
+    let otpBtnText = `Confirm OTP`;
 
     let zenith;
     if (this.state.accountbank == '057') {
@@ -362,13 +363,6 @@ export default class index extends Component {
       logo = <View style={styles.logo}><Image source={require('../../assets/icons/sterlingBankLogoWk.png')} /></View>
     } else if (this.state.accountbank == '057') {
       logo = <View style={styles.logo}><Image source={require('../../assets/icons/zenithLogo.png')} /></View>
-    }
-
-    if (this.state.loading) {
-
-      btnText = <ActivityIndicator size="small" color={this.props.secondarycolor} />
-
-      otpBtnText = <ActivityIndicator size="small" color={this.props.secondarycolor}/>
     }
 
     let access = <Image source={require('../../assets/icons/access.png')} />;
@@ -426,11 +420,13 @@ export default class index extends Component {
 
         </View>
 
-        <TouchableOpacity onPress={this.pay} style={{ width: "100%", marginTop: 15 }} disabled={(this.state.loading == false) ? false : true}>
-          <View style={{ backgroundColor: this.props.primarycolor, paddingVertical: 10, borderRadius: 5, opacity: (this.state.loading == false) ? 1 : 0.6 }}>
-            {btnText}
-          </View>
-        </TouchableOpacity>
+
+        <View style={{ marginTop: 20 }} />
+        <Button
+          text={btnText}
+          onPress={() => this.pay()}
+          loading={this.state.loading}
+        />
       </KeyboardAwareScrollView>;
 
       if (this.state.otpModal) {
@@ -454,11 +450,12 @@ export default class index extends Component {
             </View>
 
 
-            <TouchableOpacity onPress={this.confirmOtp} style={{ width: "100%" }} disabled={(this.state.loading == false) ? false : true}>
-              <View style={{ backgroundColor: this.props.primarycolor, paddingVertical: 15, borderRadius: 5, opacity: (this.state.loading == false) ? 1 : 0.6 }}>
-              {otpBtnText}
-              </View>
-            </TouchableOpacity>
+            <View style={{ marginTop: 20 }} />
+        <Button
+          text={otpBtnText}
+          onPress={() => this.confirmOtp()}
+          loading={this.state.loading}
+        />
 
           </View>
         </KeyboardAwareScrollView>;

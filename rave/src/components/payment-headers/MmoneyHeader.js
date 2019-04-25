@@ -25,10 +25,10 @@ export default class MmoneyHeader extends Component {
     render() {
         let icon;
         if (this.props.colorOne === '#F5A623') {
-            icon = <Icon name='keyboard-arrow-down' color='#647482' />;
+            icon = <Icon name='keyboard-arrow-down' color='#27347D' />;
 
         } else {
-            icon = <Icon name='keyboard-arrow-up' color='#647482' />;
+            icon = <Icon name='keyboard-arrow-up' color='#27347D' />;
 
         }
 

@@ -12,6 +12,23 @@ import { QRCode, Send, EmptyTransaction } from "../../components/svg";
 import Button from "../../components/Button";
 import client from "../../plugins/apollo";
 import User from "../../graphql/queries/user";
+import Banks from "../../graphql/queries/banks";
+import { connect } from "react-redux";
+import { updateBalance } from "../../redux/actions";
+
+function mapStateToProps(state) {
+  return state.balance;
+}
+
+function compare(a, b) {
+  if (a.Name < b.Name) {
+    return -1;
+  }
+  if (a.Name > b.Name) {
+    return 1;
+  }
+  return 0;
+}
 
 class HomeScreen extends React.Component {
   // this removes the default header reactnavigation brings
@@ -22,7 +39,8 @@ class HomeScreen extends React.Component {
     super(props);
     this.state = {
       tab: 1,
-      name: '### ###',
+      name: "### ###",
+      banks: [],
       screenHeight: Dimensions.get("window").height
     };
   }
@@ -31,8 +49,16 @@ class HomeScreen extends React.Component {
     const { data } = await client.query({
       query: User
     });
+    const BanksData = await client.query({
+      query: Banks
+    });
+    const banks = BanksData.data.banks.data;
+
+    const sortedBanks = banks.sort(compare);
     const user = data.user;
-    this.setState({name: user.fullname})
+    this.props.updateBalance(user.wallet.amount);
+
+    this.setState({ name: user.fullname, banks: sortedBanks, user });
   }
   render() {
     return (
@@ -88,7 +114,14 @@ class HomeScreen extends React.Component {
 
           <TouchableOpacity
             style={{ position: "absolute", bottom: 20, right: 20, zIndex: 99 }}
-            onPress={() =>  this.props.navigation.push("Transfer")}
+            onPress={async () => {
+              if (this.state.banks.length > 0) {
+                this.props.navigation.push("Transfer", {
+                  banks: this.state.banks,
+                  user: this.state.user
+                });
+              }
+            }}
           >
             <LinearGradient
               colors={["#212C67", "#27347D"]}
@@ -157,7 +190,7 @@ class HomeScreen extends React.Component {
                 <Text style={{ color: "white", fontSize: 12 }}>NGN</Text>
               </View>
               <Text style={{ marginLeft: 10, fontSize: 36, color: "#212C68" }}>
-                0.00
+                {String(this.props.balance)}
               </Text>
             </View>
             <Button
@@ -239,4 +272,7 @@ class HomeScreen extends React.Component {
   }
 }
 
-export default HomeScreen;
+export default connect(
+  mapStateToProps,
+  { updateBalance }
+)(HomeScreen);

@@ -18,11 +18,12 @@ class Button extends React.Component {
   render() {
     let body = (
       <TouchableOpacity
+      style={{width: '100%'}}
         onPress={this.props.onPress ? this.props.onPress : () => {}}
       >
         <LinearGradient
           colors={["#FFB82A", "#FF9900"]}
-          style={{ padding: (this.state.screenHeight> 580)?18: 10, borderRadius: 8 }}
+          style={{ padding: (this.state.screenHeight> 580)?18: 10, borderRadius: 8, width: '100%' }}
         >
           <Text style={{ color: "#FFF", textAlign: "center", fontSize: 14 }}>
             {this.props.text ? this.props.text : ""}

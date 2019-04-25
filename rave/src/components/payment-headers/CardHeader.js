@@ -15,20 +15,19 @@ export default class CardHeader extends Component {
       show: !this.state.show
     }, function () {
       if (this.state.show) {
-        this.props.page("card")
-
-      } else {
         this.props.page("home")
+      } else {
+        this.props.page("card")
       }
     })
   }
 
   render() {
     if (this.props.colorTwo === '#F5A623') {
-      icon = <Icon name='keyboard-arrow-down' color='#647482' />;
+      icon = <Icon name='keyboard-arrow-down' color='#27347D' />;
 
     } else {
-      icon = <Icon name='keyboard-arrow-up' color='#647482' />;
+      icon = <Icon name='keyboard-arrow-up' color='#27347D' />;
 
     }
 
@@ -56,7 +55,7 @@ export default class CardHeader extends Component {
       text: {
         fontSize: 16,
         textAlign: 'center',
-        color: this.props.colorTwo
+        color: '#FFF'
       }
     });
 

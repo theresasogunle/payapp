@@ -1,5 +1,6 @@
 import React from "react";
-import { TextInput, View, Text, TouchableOpacity, Picker } from "react-native";
+import { TextInput, View, Text, TouchableOpacity } from "react-native";
+import { Picker } from "native-base";
 import { ShowPassword, HidePassword } from "./svg";
 import DatePicker from "react-native-datepicker";
 import dayjs from "dayjs";
@@ -165,16 +166,28 @@ class CustomText extends React.Component {
         />
       );
     } else if (this.props.keyboardType == "dropdown") {
+      let pickers = [];
+      this.props.data.map(dt => {
+        pickers.push(
+          <Picker.Item key={dt.Code} label={dt.Name} value={dt.Code} />
+        );
+      });
       input = (
         <Picker
+          note
+          mode="dropdown"
+          style={{ flex: 1, margin: 0, padding: 0 }}
+          itemTextStyle={{
+            fontSize: 14,
+            color: "#27347D",
+            margin: 0,
+            padding: 0
+          }}
           selectedValue={this.props.value}
-          style={{ flex: 1 }}
-          onValueChange={(itemValue, itemIndex) =>
-            this.props.onChangeText(itemValue)
-          }
+          onValueChange={value => this.props.onChangeText(value)}
         >
-          <Picker.Item label="Java" value="java" />
-          <Picker.Item label="JavaScript" value="js" />
+          <Picker.Item label="Choose a bank" value="" />
+          {pickers}
         </Picker>
       );
     } else if (this.props.keyboardType == "money") {

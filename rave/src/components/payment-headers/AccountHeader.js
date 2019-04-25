@@ -25,10 +25,10 @@ export default class AccountHeader extends Component {
     render() {
         let icon;
         if (this.props.colorOne === '#F5A623') {
-            icon = <Icon name='keyboard-arrow-down' color='#647482' />;
+            icon = <Icon name='keyboard-arrow-down' color='#27347D' />;
 
         } else {
-            icon = <Icon name='keyboard-arrow-up' color='#647482' />;
+            icon = <Icon name='keyboard-arrow-up' color='#27347D' />;
 
         }
 
@@ -46,8 +46,6 @@ export default class AccountHeader extends Component {
                 shadowOpacity: 0.8,
                 shadowRadius: 2,
                 elevation: 5,
-                borderBottomWidth: 1,
-                borderBottomColor: '#f2f2f2',
                 paddingHorizontal: 30,
                 flexDirection: 'row',
                 justifyContent: 'center',

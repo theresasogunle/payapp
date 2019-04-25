@@ -1,5 +1,14 @@
 import Rave from "../../rave";
 import React from "react";
+import client from "../../plugins/apollo";
+import User from '../../graphql/queries/user';
+import FundWallet from "../../graphql/mutations/fundWallet";
+import { connect } from 'react-redux';
+import { updateBalance } from '../../redux/actions';
+
+function mapStateToProps(state) {  
+  return state.balance;
+}
 
 class RaveScreen extends React.Component {
   // this removes the default header reactnavigation brings
@@ -13,13 +22,33 @@ class RaveScreen extends React.Component {
     this.onClose = this.onClose.bind(this);
   }
 
-  onSuccess(data) {
-    console.log("success", data);
+  async onSuccess(data) {
+    this.props.navigation.push('FundSuccess')
+    const fundWallet = await client.mutate({
+      mutation: FundWallet,
+      variables: {
+        reference: this.props.navigation.getParam("txref")
+      }
+    })
+    const userData = await client.query({
+      query: User,
+      fetchPolicy: 'network-only'
+    });
+    const user = userData.data.user;
+    this.props.updateBalance(user.wallet.amount);
+    
     // You can get the transaction reference from successful transaction charge response returned and handle your transaction verification here
   }
 
-  onFailure(data) {
+  async onFailure(data) {
     console.log("error", data);
+    const fundWallet = await client.mutate({
+      mutation: FundWallet,
+      variables: {
+        reference: this.props.navigation.getParam("txref")
+      }
+    })
+    console.log(fundWallet);
   }
 
   onClose() {
@@ -37,6 +66,7 @@ class RaveScreen extends React.Component {
         publickey="FLWPUBK_TEST-1ba65cd2109b117eba7acc5d9dc79533-X"
         encryptionkey="FLWSECK_TEST91579052f76f"
         production={true}
+        txref={this.props.navigation.getParam("txref")}
         onSuccess={res => this.onSuccess(res)}
         onFailure={e => this.onFailure(e)}
         onClose={e => this.onClose(e)}
@@ -45,4 +75,4 @@ class RaveScreen extends React.Component {
   }
 }
 
-export default RaveScreen;
+export default connect(mapStateToProps, {updateBalance})(RaveScreen);

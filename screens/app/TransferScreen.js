@@ -1,14 +1,10 @@
 import React from "react";
-import { View, StatusBar, Text, TouchableOpacity } from "react-native";
+import { View, StatusBar, StyleSheet, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo";
-import Button from "../../components/Button";
 import Top from "../../components/Top";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import CustomText from "../../components/Text";
-
-const sleep = milliseconds => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
-};
+import SegmentedControlTab from "react-native-segmented-control-tab";
+import WalletToBank from "./WalletToBank";
+import WalletToWallet from "./WalletToWallet";
 
 // this is the screen that shows when the user wants to send money
 class TransferScreen extends React.Component {
@@ -19,62 +15,15 @@ class TransferScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
-      amount: "",
-      accountNumber:""
+      selectedIndex: 0
     };
-  }
-  // this checks for error in the form
-  async validate() {
-    // set all the errors to empty
-    this.setState({ error_amount: "" });
-    this.setState({ error_accountNumber: "" });
-    
-    
-    // validate amount
-    
-    if (this.state.amount < 100) {
-      this.setState({
-        error_amount: "The lowest amount is 100 NGN"
-      });
-    }
-    if (this.state.amount > 100000) {
-      this.setState({
-        error_amount: "The highest amount is 100,000 NGN"
-      });
-    }
-    // validate accountNumber
-    if (this.state.accountNumber.length < 10) {
-      this.setState({
-        error_accountNumber: "Invalid account number"
-      });
-    }
-  // i put the sleep function so as for the function can take time to validate before returning a response
-  await sleep(1200);
-  // check if all errors are empty
-  if (
-    this.state.error_amount == "" &&
-    this.state.error_accountNumber == ""
-   
-  ) {
-    return true;
-  }
-  return false;
-  
-  }
-
-  async sendMoney(){
-   
-    if( await this.validate()){
-      console.log("Working");
-      
-    }else{
-      console.log("Error");
-      
-    }
   }
 
   render() {
+    let transfer = <WalletToBank navigation={this.props.navigation} />;
+    if (this.state.selectedIndex === 0) {
+      transfer = <WalletToWallet navigation={this.props.navigation} userPhoneNumber={this.props.navigation.getParam('user').phonenumber} />;
+    }
     return (
       <View
         style={{
@@ -96,8 +45,9 @@ class TransferScreen extends React.Component {
             }}
           >
             <LinearGradient colors={["#F8F9FE", "#F9F9F9"]} style={{ flex: 1 }}>
-              <KeyboardAwareScrollView
+              <View
                 style={{
+                  flex: 1,
                   padding: 20,
                   alignContent: "center"
                 }}
@@ -105,54 +55,19 @@ class TransferScreen extends React.Component {
                 extraHeight={220}
                 enableOnAndroid={true}
               >
-                <CustomText
-                  size={18}
-                  textWeight={"400"}
-                  side={
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        color: "#27347D",
-                        fontWeight: "bold"
-                      }}
-                    >
-                      {"\u20A6"}
-                    </Text>
-                  }
-                  label="Amount"
-                  keyboardType="phone-pad"
-                  value={this.state.amount}
-                  error={this.state.error_amount}
-                  onChangeText={amount => this.setState({ amount })}
+                <SegmentedControlTab
+                  tabsContainerStyle={styles.tabsContainerStyle}
+                  tabStyle={styles.tabStyle}
+                  tabTextStyle={styles.tabTextStyle}
+                  activeTabStyle={styles.activeTabStyle}
+                  activeTabTextStyle={styles.activeTabTextStyle}
+                  values={["Send To Wallet", "Send To Bank"]}
+                  selectedIndex={this.state.selectedIndex}
+                  onTabPress={selectedIndex => this.setState({ selectedIndex })}
                 />
-                <View style={{ marginBottom: 13 }} />
-                <CustomText keyboardType="dropdown" label="Choose the bank"  />
-                <View style={{ marginBottom: 13 }} />
-                <CustomText
-                label= "Account Number"
-                keyboardType="phone-pad"
-                maxLength={10}
-                size={18}
-                value={this.state.accountNumber}
-                error={this.state.error_accountNumber}
-                onChangeText={accountNumber => this.setState({ accountNumber })}
-                />
-                <View style={{ marginBottom: 13 }} />
-                <View
-                  style={{
-                    justifyContent: "space-evenly",
-                    alignItems: "center",
-                    flexDirection: "row"
-                  }}
-                />
-                <View style={{ marginBottom: 13 }} />
-                <Button
-                  text="Send Money"
-                    onPress={() => this.sendMoney()}
-                    // loading={this.state.loading}
-                />
-                <View style={{ marginBottom: 13 }} />
-              </KeyboardAwareScrollView>
+                <View style={{ marginBottom: 20 }} />
+                {transfer}
+              </View>
             </LinearGradient>
           </View>
         </LinearGradient>
@@ -162,3 +77,38 @@ class TransferScreen extends React.Component {
 }
 
 export default TransferScreen;
+
+const styles = StyleSheet.create({
+  tabsContainerStyle: {
+    borderColor: "#212C68"
+  },
+  tabStyle: {
+    //custom styles
+    borderColor: "#212C68"
+  },
+  tabTextStyle: {
+    color: "#212C68"
+    //custom styles
+  },
+  activeTabStyle: {
+    //custom styles
+    backgroundColor: "#212C68"
+  },
+  activeTabTextStyle: {
+    //custom styles
+    color: "#FF9900"
+  },
+  tabBadgeContainerStyle: {
+    //custom styles
+    borderColor: "#212C68"
+  },
+  activeTabBadgeContainerStyle: {
+    //custom styles
+  },
+  tabBadgeStyle: {
+    //custom styles
+  },
+  activeTabBadgeStyle: {
+    //custom styles
+  }
+});
