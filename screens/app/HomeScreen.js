@@ -5,7 +5,8 @@ import {
   ImageBackground,
   Text,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  AsyncStorage
 } from "react-native";
 import { LinearGradient } from "expo";
 import { QRCode, Send, EmptyTransaction } from "../../components/svg";
@@ -15,6 +16,7 @@ import User from "../../graphql/queries/user";
 import Banks from "../../graphql/queries/banks";
 import { connect } from "react-redux";
 import { updateBalance } from "../../redux/actions";
+import Loading from "../../components/Loading";
 
 function mapStateToProps(state) {
   return state.balance;
@@ -41,11 +43,18 @@ class HomeScreen extends React.Component {
       tab: 1,
       name: "### ###",
       banks: [],
+      loading: 'false',
       screenHeight: Dimensions.get("window").height
     };
   }
 
+  _signOutAsync = async () => {
+    await AsyncStorage.clear();
+    this.props.navigation.navigate("Auth");
+  };
+
   async componentDidMount() {
+    this.setState({ loading: true });
     const { data } = await client.query({
       query: User
     });
@@ -58,15 +67,25 @@ class HomeScreen extends React.Component {
     const user = data.user;
     this.props.updateBalance(user.wallet.amount);
 
-    this.setState({ name: user.fullname, banks: sortedBanks, user });
+    this.setState({
+      name: user.fullname,
+      banks: sortedBanks,
+      user,
+      loading: false
+    });
   }
   render() {
+    let loading = <Loading />;
+    if (!this.state.loading) {
+      loading = null;
+    }
     return (
       <View
         style={{
           flex: 1
         }}
       >
+        {loading}
         <StatusBar backgroundColor="#FF9E00" barStyle="light-content" />
         <LinearGradient colors={["#F8F9FE", "#F9F9F9"]} style={{ flex: 1 }}>
           <ImageBackground
@@ -88,7 +107,10 @@ class HomeScreen extends React.Component {
           >
             <View
               style={{
-                padding: 20
+                padding: 20,
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexDirection: "row"
               }}
             >
               <View>
@@ -109,6 +131,18 @@ class HomeScreen extends React.Component {
                   Wallet
                 </Text>
               </View>
+              <TouchableOpacity onPress={this._signOutAsync}>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    paddingVertical: 10,
+                    paddingLeft: 10,
+                    color: "white"
+                  }}
+                >
+                  Logout
+                </Text>
+              </TouchableOpacity>
             </View>
           </ImageBackground>
 

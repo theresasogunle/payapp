@@ -43,11 +43,6 @@ class WalletToWallet extends React.Component {
 
   async transfer() {
     this.setState({ error: "", loading: true });
-    console.log({
-      amount: parseFloat(this.state.amount),
-      accountNumber: this.state.accountNumber,
-      bankCode: this.state.bank
-    });
 
     if (this.state.receiverName) {
       const { data } = await client.mutate({
@@ -62,9 +57,12 @@ class WalletToWallet extends React.Component {
           query: User,
           fetchPolicy: 'network-only'
         });
+        
         const user = userData.data.user;
         this.props.updateBalance(user.wallet.amount);
-        this.props.navigation.push('FundSuccess')
+        this.props.navigation.push('FundSuccess', {
+          transactionReference: data.walletToWalletTransfer.transactionReference
+        })
       }
       this.setState({ error: "", loading: false });
 
@@ -143,47 +141,6 @@ class WalletToWallet extends React.Component {
       } catch (error) {
         self.setState({ receiverName: "", loading: false });
       }
-    }
-  }
-
-  // this checks for error in the form
-  async validate() {
-    // set all the errors to empty
-    this.setState({ error_amount: "" });
-    this.setState({ error_accountNumber: "" });
-
-    // validate amount
-
-    if (this.state.amount < 100) {
-      this.setState({
-        error_amount: "The lowest amount is 100 NGN"
-      });
-    }
-    if (this.state.amount > 100000) {
-      this.setState({
-        error_amount: "The highest amount is 100,000 NGN"
-      });
-    }
-    // validate accountNumber
-    if (this.state.accountNumber.length < 10) {
-      this.setState({
-        error_accountNumber: "Invalid account number"
-      });
-    }
-    // i put the sleep function so as for the function can take time to validate before returning a response
-    await sleep(1200);
-    // check if all errors are empty
-    if (this.state.error_amount == "" && this.state.error_accountNumber == "") {
-      return true;
-    }
-    return false;
-  }
-
-  async sendMoney() {
-    if (await this.validate()) {
-      console.log("Working");
-    } else {
-      console.log("Error");
     }
   }
 

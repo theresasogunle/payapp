@@ -39,12 +39,6 @@ class WalletToBank extends React.Component {
 
   async transfer() {
     this.setState({ error: "", loading: true });
-    console.log({
-      amount: parseFloat(this.state.amount),
-      accountNumber: this.state.accountNumber,
-      bankCode: this.state.bank
-    });
-
     if (this.state.receiverName) {
       const { data } = await client.mutate({
         mutation: WalletToBankTransfer,
@@ -54,7 +48,6 @@ class WalletToBank extends React.Component {
           bankCode: this.state.bank
         }
       });
-      console.log(data);
       this.setState({ error: "", loading: false });
       // const userData = await client.query({
       //   query: User,

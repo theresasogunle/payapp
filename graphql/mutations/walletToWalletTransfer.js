@@ -6,6 +6,7 @@ export default gql`
       data: { amount: $amount, receiverPhone: $receiverPhone }
     ) {
       status
+      transactionReference
     }
   }
 `;

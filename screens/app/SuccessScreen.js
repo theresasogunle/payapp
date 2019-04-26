@@ -1,13 +1,33 @@
 import React from "react";
-import { View, StatusBar, Text, TouchableOpacity } from "react-native";
+import { View, StatusBar, Text } from "react-native";
 import { LinearGradient } from "expo";
-import { Lock, Card, Calendar, SuccessIcon } from "../../components/svg";
+import { SuccessIcon } from "../../components/svg";
 import Button from "../../components/Button";
 import Top from "../../components/Top";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import CustomText from "../../components/Text";
+import Loading from "../../components/Loading";
+import client from "../../plugins/apollo";
+import GetTransactionDetails from "../../graphql/queries/getTransactionDetails";
 
-// this is the screen that shows when the user wants to make payment
+function formatMoney(n, c, d, t) {
+  var c = isNaN((c = Math.abs(c))) ? 2 : c,
+    d = d == undefined ? "." : d,
+    t = t == undefined ? "," : t,
+    s = n < 0 ? "-" : "",
+    i = String(parseInt((n = Math.abs(Number(n) || 0).toFixed(c)))),
+    j = (j = i.length) > 3 ? j % 3 : 0;
+
+  return (
+    s +
+    (j ? i.substr(0, j) + t : "") +
+    i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) +
+    (c
+      ? d +
+        Math.abs(n - i)
+          .toFixed(c)
+          .slice(2)
+      : "")
+  );
+}
 class SuccessScreen extends React.Component {
   // this removes the default header reactnavigation brings
   static navigationOptions = {
@@ -16,12 +36,40 @@ class SuccessScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false
+      loading: true,
+      transactionDetails: {
+        amount: "#####",
+        fee: 0,
+        medium: "###",
+        mediumName: "### ####",
+        mediumNumber: "**** ****",
+        status: "success",
+        total: "####"
+      }
     };
   }
 
+  async componentDidMount() {
+    const { data } = await client.query({
+      query: GetTransactionDetails,
+      variables: {
+        transactionReference: this.props.navigation.getParam(
+          "transactionReference"
+        )
+      }
+    });
+    const transactionDetails = data.getTransactionDetails;
+    console.log(transactionDetails);
+    
+    this.setState({
+      loading: false,
+      transactionDetails
+    });
+  }
+
   render() {
-    return (
+    let medium;
+    let loading = (
       <View
         style={{
           flex: 1
@@ -94,7 +142,7 @@ class SuccessScreen extends React.Component {
                       color: "#212C67"
                     }}
                   >
-                    1000.00
+                    {formatMoney(this.state.transactionDetails.total)}
                   </Text>
                 </View>
               </View>
@@ -126,7 +174,7 @@ class SuccessScreen extends React.Component {
                     opacity: 0.49
                   }}
                 >
-                  ₦ 990.00
+                  ₦ {formatMoney(this.state.transactionDetails.amount)}
                 </Text>
               </View>
               <View
@@ -150,31 +198,7 @@ class SuccessScreen extends React.Component {
                     opacity: 0.49
                   }}
                 >
-                  ₦ 10.00
-                </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: 15
-                }}
-              >
-                <Text
-                  style={{ fontSize: 13, fontWeight: "400", color: "#212C68" }}
-                >
-                  Tax
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 13,
-                    fontWeight: "500",
-                    color: "#27347D",
-                    opacity: 0.49
-                  }}
-                >
-                  ₦ 0.00
+                  ₦ {formatMoney(this.state.transactionDetails.fee)}
                 </Text>
               </View>
               <View
@@ -193,7 +217,7 @@ class SuccessScreen extends React.Component {
                 <Text
                   style={{ fontSize: 13, fontWeight: "500", color: "#27347D" }}
                 >
-                  ₦ 410.00
+                  ₦ {formatMoney(this.state.transactionDetails.total)}
                 </Text>
               </View>
             </View>
@@ -217,7 +241,7 @@ class SuccessScreen extends React.Component {
                 <Text
                   style={{ fontSize: 14, fontWeight: "500", color: "#212C67" }}
                 >
-                  Credit Card
+                  {this.state.transactionDetails.mediumName}
                 </Text>
                 <Text
                   style={{
@@ -227,21 +251,46 @@ class SuccessScreen extends React.Component {
                     marginTop: 10
                   }}
                 >
-                  **** **** **** 4567
+                  {this.state.transactionDetails.medium.toLowerCase() === "card"
+                    ? `**** **** **** ${
+                        this.state.transactionDetails.mediumNumber
+                      }`
+                    : this.state.transactionDetails.mediumNumber}
                 </Text>
               </View>
             </View>
-            <View style={{
-              padding: 30, justifyContent: 'center', alignItems:'center', flex:1
-            }}>
-            <SuccessIcon />
-            <Text style={{textAlign: 'center', color: '#212C67', marginTop: 10, marginBottom: 25}}>Successful Funding</Text>
-              <Button text="Fund More" onPress={() => this.props.navigation.push("Fund")} />
+            <View
+              style={{
+                padding: 30,
+                justifyContent: "center",
+                alignItems: "center",
+                flex: 1
+              }}
+            >
+              <SuccessIcon />
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "#212C67",
+                  marginTop: 10,
+                  marginBottom: 25
+                }}
+              >
+                Successful Funding
+              </Text>
+              <Button
+                text="Fund More"
+                onPress={() => this.props.navigation.push("Fund")}
+              />
             </View>
           </View>
         </LinearGradient>
       </View>
     );
+    if (this.state.loading) {
+      loading = <Loading />;
+    }
+    return loading;
   }
 }
 
