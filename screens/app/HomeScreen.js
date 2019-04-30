@@ -6,7 +6,8 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
-  AsyncStorage
+  AsyncStorage,
+  ScrollView
 } from "react-native";
 import { LinearGradient } from "expo";
 import { QRCode, Send, EmptyTransaction } from "../../components/svg";
@@ -14,6 +15,7 @@ import Button from "../../components/Button";
 import client from "../../plugins/apollo";
 import User from "../../graphql/queries/user";
 import Banks from "../../graphql/queries/banks";
+import WalletTransactionHistory from "../../graphql/queries/walletTransactionHistory";
 import { connect } from "react-redux";
 import { updateBalance } from "../../redux/actions";
 import Loading from "../../components/Loading";
@@ -43,15 +45,47 @@ class HomeScreen extends React.Component {
       tab: 1,
       name: "### ###",
       banks: [],
-      loading: 'false',
+      loading: "false",
+      transactions: [],
       screenHeight: Dimensions.get("window").height
     };
+    this.formatMoney = this.formatMoney.bind(this);
+    this.excerpt = this.excerpt.bind(this);
   }
 
   _signOutAsync = async () => {
     await AsyncStorage.clear();
     this.props.navigation.navigate("Auth");
   };
+
+  excerpt(text) {
+    const length = 22;
+    if (text.length <= length) {
+      return text;
+    }
+    return text.substring(0, length)+'...';
+  }
+
+  formatMoney(n, c, d, t) {
+    var c = isNaN((c = Math.abs(c))) ? 2 : c,
+      d = d == undefined ? "." : d,
+      t = t == undefined ? "," : t,
+      s = n < 0 ? "-" : "",
+      i = String(parseInt((n = Math.abs(Number(n) || 0).toFixed(c)))),
+      j = (j = i.length) > 3 ? j % 3 : 0;
+
+    return (
+      s +
+      (j ? i.substr(0, j) + t : "") +
+      i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) +
+      (c
+        ? d +
+          Math.abs(n - i)
+            .toFixed(c)
+            .slice(2)
+        : "")
+    );
+  }
 
   async componentDidMount() {
     this.setState({ loading: true });
@@ -61,7 +95,11 @@ class HomeScreen extends React.Component {
     const BanksData = await client.query({
       query: Banks
     });
+    const Transactions = await client.query({
+      query: WalletTransactionHistory
+    });
     const banks = BanksData.data.banks.data;
+    const transactions = Transactions.data.walletTransactionHistory;
 
     const sortedBanks = banks.sort(compare);
     const user = data.user;
@@ -71,11 +109,53 @@ class HomeScreen extends React.Component {
       name: user.fullname,
       banks: sortedBanks,
       user,
+      transactions,
       loading: false
     });
   }
   render() {
     let loading = <Loading />;
+    let transactions = [];
+
+    this.state.transactions.map(transaction => {
+      const BGcolor = transaction.type == "Debit" ? "#D0021B" : "#7ED321";
+      const Textcolor = transaction.type == "Debit" ? "#D0021B" : "#414141";
+      transactions.push(
+        <View
+          key={transaction.transactionReference}
+          style={{
+            backgroundColor: "#FFF",
+            shadowOffset: { x: 0, y: 2 },
+            shadowRadius: 14,
+            shadowColor: "rgba(39, 52, 125, .5)",
+            paddingVertical: 9,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 5
+          }}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={{
+                height: 38,
+                width: 5,
+                backgroundColor: BGcolor,
+                borderBottomRightRadius: 5,
+                borderTopRightRadius: 5,
+                marginRight: 10
+              }}
+            />
+            <Text>{this.excerpt(transaction.description)}</Text>
+          </View>
+          <Text style={{ marginRight: 20, color: Textcolor }}>
+            {transaction.type == "Debit" ? "-" : null}
+            {String(this.formatMoney(transaction.amount))}
+          </Text>
+        </View>
+      );
+    });
+
     if (!this.state.loading) {
       loading = null;
     }
@@ -232,74 +312,24 @@ class HomeScreen extends React.Component {
               onPress={() => this.props.navigation.push("Fund")}
             />
           </View>
-          <View
+          <Text
             style={{
-              marginTop: this.state.screenHeight > 580 ? 20 : 60,
+              marginTop: this.state.screenHeight > 580 ? 30 : 70,
+              paddingHorizontal: 20,
+              paddingVertical: 10,
+              color: "#212C67",
+              fontWeight: "bold"
+            }}
+          >
+            Transactions
+          </Text>
+          <ScrollView
+            style={{
               flex: 1
             }}
           >
-            <View style={{ padding: 10, flexDirection: "row" }}>
-              <TouchableOpacity onPress={() => this.setState({ tab: 1 })}>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontWeight: "500",
-                    padding: 10,
-                    marginLeft: 19,
-                    color: this.state.tab === 1 ? "#212C67" : "#9A9FBB"
-                  }}
-                >
-                  All
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.setState({ tab: 2 })}>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontWeight: "500",
-                    padding: 10,
-                    marginLeft: 19,
-                    color: this.state.tab === 2 ? "#212C67" : "#9A9FBB"
-                  }}
-                >
-                  Received
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.setState({ tab: 3 })}>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontWeight: "500",
-                    padding: 10,
-                    marginLeft: 19,
-                    color: this.state.tab === 3 ? "#212C67" : "#9A9FBB"
-                  }}
-                >
-                  Sent
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <EmptyTransaction />
-              <Text
-                style={{
-                  color: "#212C67",
-                  fontWeight: "500",
-                  fontSize: 17,
-                  marginTop: 20
-                }}
-              >
-                You have no any transaction yet
-              </Text>
-              {/* <Text style={{color: '#A0A4B8', fontSize: 12, fontWeight: '500'}}>Add new card and start sending money</Text> */}
-            </View>
-          </View>
+            {transactions}
+          </ScrollView>
         </LinearGradient>
       </View>
     );

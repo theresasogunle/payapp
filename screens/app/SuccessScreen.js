@@ -79,7 +79,7 @@ class SuccessScreen extends React.Component {
         <StatusBar backgroundColor="#FF9E00" barStyle="light-content" />
         <LinearGradient colors={["#F8F9FE", "#F9F9F9"]} style={{ flex: 1 }}>
           <Top
-            mainText="Complete"
+            mainText="Transaction"
             navigation={this.props.navigation}
             cancelText="Done"
           />
@@ -93,7 +93,7 @@ class SuccessScreen extends React.Component {
               opacity: 0.9
             }}
           >
-            <Text style={{ color: "#212C68", fontSize: 14 }}>Funded</Text>
+            <Text style={{ color: "#212C68", fontSize: 14 }}>{(this.state.transactionDetails.type == "Debit")? 'Debited': 'Credited'}</Text>
           </LinearGradient>
           <View
             style={{
@@ -122,7 +122,7 @@ class SuccessScreen extends React.Component {
                 <Text
                   style={{ fontSize: 16, fontWeight: "500", color: "#212C67" }}
                 >
-                  Amount Funded
+                  Amount {(this.state.transactionDetails.type == "Debit")? 'Debited': 'Credited'}
                 </Text>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <Text
@@ -164,7 +164,7 @@ class SuccessScreen extends React.Component {
                 <Text
                   style={{ fontSize: 13, fontWeight: "400", color: "#212C68" }}
                 >
-                  You Sent
+                  You {(this.state.transactionDetails.type == "Debit")? 'sent': 'received'}
                 </Text>
                 <Text
                   style={{
@@ -235,7 +235,7 @@ class SuccessScreen extends React.Component {
               <Text
                 style={{ fontSize: 16, fontWeight: "400", color: "#212C67" }}
               >
-                Funding Method
+                {(this.state.transactionDetails.type == "Debit")? 'Debit': 'Credit'} Method
               </Text>
               <View style={{ alignItems: "flex-end" }}>
                 <Text
@@ -276,12 +276,8 @@ class SuccessScreen extends React.Component {
                   marginBottom: 25
                 }}
               >
-                Successful Funding
+                Successful
               </Text>
-              <Button
-                text="Fund More"
-                onPress={() => this.props.navigation.push("Fund")}
-              />
             </View>
           </View>
         </LinearGradient>

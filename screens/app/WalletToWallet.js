@@ -60,7 +60,7 @@ class WalletToWallet extends React.Component {
         
         const user = userData.data.user;
         this.props.updateBalance(user.wallet.amount);
-        this.props.navigation.push('FundSuccess', {
+        return this.props.navigation.push('FundSuccess', {
           transactionReference: data.walletToWalletTransfer.transactionReference
         })
       }
@@ -92,7 +92,7 @@ class WalletToWallet extends React.Component {
       pageOffset: 0
     });
     if (contacts.total > 0) {
-      console.log(contacts);
+      // console.log(contacts);
 
       // Alert.alert(
       //   'Your first contact is...',

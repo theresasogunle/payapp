@@ -48,17 +48,21 @@ class WalletToBank extends React.Component {
           bankCode: this.state.bank
         }
       });
-      this.setState({ error: "", loading: false });
-      // const userData = await client.query({
-      //   query: User,
-      //   fetchPolicy: 'network-only'
-      // });
-      // const user = userData.data.user;
-      // this.props.updateBalance(user.wallet.amount);
-
-      // if (data.getBankDetails.status === ) {
-
-      // }
+      console.log(data);
+      
+      if (data.walletToBankTransfer.status === "success") {
+        const userData = await client.query({
+          query: User,
+          fetchPolicy: 'network-only'
+        });
+        
+        const user = userData.data.user;
+        this.props.updateBalance(user.wallet.amount);
+        return this.props.navigation.push('FundSuccess', {
+          transactionReference: data.walletToBankTransfer.transactionReference
+        })
+      }
+      return this.setState({ error: "An error occured", loading: false });
     }
     this.setState({ error: "Invalid Details", loading: false });
   }
@@ -142,7 +146,7 @@ class WalletToBank extends React.Component {
           maxLength={10}
           size={18}
           value={this.state.accountNumber}
-          error={this.state.error_accountNumber}
+          error={this.state.error}
           onChangeText={accountNumber => {
             this.setState({ accountNumber });
             this.checkInput();

@@ -11,6 +11,7 @@ export default gql`
     mediumName
     mediumNumber
     status
+    type
   }
 }
 `
